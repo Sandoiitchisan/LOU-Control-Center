@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="58" viewBox="0 0 340 58" role="img" aria-label="Télécharger pour Windows — Setup autonome x64">
+  <rect width="340" height="58" rx="12" fill="#68e4cf"/>
+  <path d="M28 17v16m-6-6 6 6 6-6m-15 9v5h18v-5" fill="none" stroke="#0c1015" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="51" y="26" fill="#0c1015" font-family="Segoe UI,Arial,sans-serif" font-size="17" font-weight="700">Télécharger pour Windows</text>
+  <text x="51" y="44" fill="#164f47" font-family="Segoe UI,Arial,sans-serif" font-size="12">SETUP AUTONOME · VERSION 2.1.0 · X64</text>
+</svg>

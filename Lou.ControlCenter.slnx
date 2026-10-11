@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Lou.App/Lou.App.csproj" />
+    <Project Path="src/Lou.Core/Lou.Core.csproj" />
+    <Project Path="src/Lou.Devices/Lou.Devices.csproj" />
+    <Project Path="src/Lou.Providers/Lou.Providers.csproj" />
+    <Project Path="src/Lou.Rendering/Lou.Rendering.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Lou.Tests/Lou.Tests.csproj" />
+  </Folder>
+</Solution>

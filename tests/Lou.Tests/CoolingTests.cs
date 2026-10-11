@@ -1,0 +1,20 @@
+using Lou.Core;
+using Lou.Providers;
+using Xunit;
+namespace Lou.Tests;
+public class CoolingTests
+{
+    private static readonly DateTimeOffset Now=DateTimeOffset.UtcNow;
+    private static readonly FanBinding Pump=new(FanRole.Pump,"LibreHardwareMonitor","board","/lpc/ite/0","/lpc/ite/0/fan/5","SYS_FAN4_PUMP");
+    private static HardwareReading Sensor(double? value=2700)=>new(Pump.SensorId,"ITE","SuperIO","Fan #6","Fan",value,Pump.ControllerId);
+    private static HardwareSnapshot Data(params HardwareReading[] readings)=>new(Now,"Lecture active",readings,"board");
+    [Fact] public void Mapping_uses_identity_even_when_names_order_and_rpm_change(){var rows=new[]{Sensor(950) with{Name="Renommé"},Sensor(5000) with{Id="other"}};foreach(var order in new[]{rows,rows.Reverse().ToArray()}){var pc=HardwareSensors.EnrichMapped(new(),Data(order),Now,[Pump]);Assert.Equal(950,pc.Pump);Assert.Null(pc.CpuFan);}}
+    [Fact] public void Missing_wrong_board_controller_provider_type_and_duplicates_never_fallback(){foreach(var data in new[]{Data(Sensor()) with{Board="other"},Data(Sensor() with{ControllerId="other"}),Data(Sensor() with{Provider="other"}),Data(Sensor() with{Type="Temperature"}),Data(Sensor() with{Id="other"}),Data(Sensor(),Sensor()),Data()})Assert.Null(HardwareSensors.EnrichMapped(new(Pump:999),data,Now,[Pump]).Pump);}
+    [Fact] public void No_implicit_binding_by_header_name_or_speed(){Assert.Null(HardwareSensors.EnrichMapped(new(),Data(Sensor() with{Name="System Fan #4 / Pump"}),Now,[]).Pump);}
+    [Fact] public void Stale_future_and_invalid_values_are_unknown_but_zero_is_valid(){foreach(var time in new[]{Now.AddSeconds(-6),Now.AddSeconds(3)})Assert.Null(HardwareSensors.EnrichMapped(new(),Data(Sensor()) with{Time=time},Now,[Pump]).Pump);foreach(var value in new double?[]{null,double.NaN,double.PositiveInfinity,-1,20000})Assert.Null(HardwareSensors.EnrichMapped(new(),Data(Sensor(value)),Now,[Pump]).Pump);Assert.Equal(0,HardwareSensors.EnrichMapped(new(),Data(Sensor(0)),Now,[Pump]).Pump);}
+    [Fact] public void Roles_are_independent_and_use_one_shared_snapshot(){var radiator=Pump with{Role=FanRole.Radiator,SensorId="rad",Connector="CPU_FAN"};var rear=Pump with{Role=FanRole.Rear,SensorId="rear",Connector="SYS_FAN1"};var bottom=Pump with{Role=FanRole.Bottom,SensorId="bottom",Connector="SYS_FAN2"};var pc=HardwareSensors.EnrichMapped(new(),Data(Sensor(),Sensor(1200) with{Id="rad"},Sensor(1050) with{Id="rear"},Sensor(890) with{Id="bottom"}),Now,[Pump,radiator,rear,bottom]);Assert.Equal(1200,pc.CpuFan);Assert.Equal(1050,pc.RearFan);Assert.Equal(890,pc.BottomFan);Assert.Equal(2700,pc.Pump);}
+    [Fact] public void Gpu_zero_remains_available_without_motherboard_collector(){var gpu=new HardwareReading("gpu/rpm","Radeon","GpuAmd","GPU Fan RPM","Fan",0,"gpu","gpu","Radeon","AMD ADL");var binding=new FanBinding(FanRole.Gpu,"AMD ADL","Radeon","gpu","gpu/rpm","GPU");var pc=HardwareSensors.EnrichMapped(new(),null,Now,[binding],gpu);Assert.Equal(0,pc.GpuFan);Assert.Equal("À l’arrêt",pc.Fans!.Single(f=>f.Role==FanRole.Gpu).Status);Assert.Null(HardwareSensors.EnrichMapped(new(),null,Now,[binding],gpu with{ControllerId="other"}).GpuFan);}
+    [Fact] public void Gpu_identity_is_physical_pci_not_display_output(){var first=AmdProvider.PhysicalControllerIdentity(@"PCI\VEN_1002&DEV_7550\6&DEVICE",3,0,0);Assert.Equal(first,AmdProvider.PhysicalControllerIdentity(@"PCI\VEN_1002&DEV_7550\6&DEVICE&02",3,0,0));Assert.NotEqual(first,AmdProvider.PhysicalControllerIdentity(@"PCI\VEN_1002&DEV_7550\6&DEVICE",4,0,0));}
+    [Fact] public void Settings_reject_duplicate_roles_and_duplicate_sensor_assignments(){Assert.Throws<InvalidDataException>(()=>new Settings{FanBindings=[Pump,Pump]}.Validate());Assert.Throws<InvalidDataException>(()=>new Settings{FanBindings=[Pump,Pump with{Role=FanRole.Rear}]}.Validate());}
+    [Fact] public void Full_binding_survives_export_import(){string path=Path.Combine(Path.GetTempPath(),"lou-cooling-"+Guid.NewGuid(),"settings.json");ConfigStore.Save(new Settings{FanBindings=[Pump]},path);Assert.Equal(Pump,ConfigStore.Load(path).FanBindings.Single());}
+}

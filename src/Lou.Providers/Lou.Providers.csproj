@@ -1,0 +1,1 @@
+<Project Sdk="Microsoft.NET.Sdk"><ItemGroup><PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" /><ProjectReference Include="../Lou.Core/Lou.Core.csproj" /><PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.12" /></ItemGroup></Project>

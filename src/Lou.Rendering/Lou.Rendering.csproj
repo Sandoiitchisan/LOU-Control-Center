@@ -1,0 +1,1 @@
+<Project Sdk="Microsoft.NET.Sdk"><ItemGroup><ProjectReference Include="../Lou.Core/Lou.Core.csproj"/><PackageReference Include="SkiaSharp" Version="3.119.1"/></ItemGroup></Project>

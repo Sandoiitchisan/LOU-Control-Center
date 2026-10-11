@@ -1,0 +1,26 @@
+.dotnet/
+**/bin/
+**/obj/
+artifacts/
+Data/
+**/Data/
+Review/
+**/Review/
+TestResults/
+.vs/
+docs/research/
+tools/InnoSetup/
+*.user
+*.log
+*.suo
+*.trx
+*.pfx
+*.p12
+*.pem
+*.key
+.env
+settings.json*
+hardware-sensors.json*
+runtime-status.json
+preview-status.json
+# Official pinned redistributables in tools/PawnIO and tools/PresentMon are intentional.

@@ -1,0 +1,22 @@
+using System.Text.Json;
+using Lou.Core;
+using Lou.Providers;
+using Lou.Rendering;
+using SkiaSharp;
+using Xunit;
+namespace Lou.Tests;
+public class GamingTests
+{
+    [Fact]public void Standalone_engine_game_needs_no_name_or_shop(){var evidence=GameDiscovery.Evidence("BrandNew-Win64-Shipping","Brand New","UnrealWindow",["d3d12.dll"],true,true,true);Assert.True(GameDiscovery.IsGame(evidence,120,2));Assert.True(GameDiscovery.IsGame(evidence,0,0));}
+    [Theory][InlineData("brave","Chrome_WidgetWin_1","chrome.dll")][InlineData("ChatClient","Application","libcef.dll")][InlineData("VideoPlayer","QtWindow","libvlc.dll")][InlineData("blender","GHOST_WindowClass","opengl32.dll")]
+    public void Desktop_apps_are_not_games_even_fullscreen(string exe,string cls,string module){var evidence=GameDiscovery.Evidence(exe,"",cls,[module,"d3d11.dll","xinput1_4.dll"],true,true,true);Assert.False(GameDiscovery.IsGame(evidence,144,10));}
+    [Fact]public void Generic_native_graphics_game_can_be_recognized_and_kept_after_alt_tab(){var evidence=GameDiscovery.Evidence("UnknownTitle","","GameWindow",["vulkan-1.dll","xinput1_4.dll"],true,true,false);Assert.True(GameDiscovery.IsGame(evidence,60,3));Assert.True(GameDiscovery.IsGame(evidence with{Foreground=false},60,3,alreadySelected:true));Assert.False(GameDiscovery.IsGame(evidence with{Graphics=false},60,3));}
+    [Fact]public void Explicit_override_still_requires_real_frames(){var app=new GraphicsEvidence(false,true,true,true,true,true,true);Assert.True(GameDiscovery.IsGame(app,60,2,force:true));Assert.False(GameDiscovery.IsGame(app,0,2,force:true));}
+    [Fact]public void Byte_rates_are_decimal_megabytes(){Assert.Equal(125,PcProvider.NetworkMegabytesPerSecond(250_000_000,2));Assert.Equal(0,PcProvider.NetworkMegabytesPerSecond(0,1));}
+    [Fact]public void Global_capture_keeps_processes_separate_and_expires_them(){var tracker=new PresentationTracker();var now=DateTimeOffset.UtcNow;tracker.Add("Application,ProcessID,SwapChainAddress,TimeInSeconds,msBetweenPresents",now);for(int i=0;i<30;i++){tracker.Add($"game,42,A,{i},10",now.AddMilliseconds(i*100));tracker.Add($"app,23,B,{i},20",now.AddMilliseconds(i*100));}var data=tracker.Read(now.AddSeconds(3));Assert.Equal(100,data.Single(a=>a.ProcessId==42).Fps);Assert.Equal(50,data.Single(a=>a.ProcessId==23).Fps);Assert.True(data.All(a=>a.ObservedSeconds>1.5));Assert.Empty(tracker.Read(now.AddSeconds(7)));}
+    [Fact]public void Global_capture_memory_is_bounded_and_new_headers_clear_old_pids(){var tracker=new PresentationTracker();var now=DateTimeOffset.UtcNow;string header="ProcessID,SwapChainAddress,TimeInSeconds,msBetweenPresents";tracker.Add(header,now);for(int i=1;i<=200;i++){tracker.Add($"{i},A,0,10",now);tracker.Add($"{i},A,1,10",now);}Assert.Equal(64,tracker.Read(now).Count);tracker.Add(header,now);Assert.Empty(tracker.Read(now));}
+    [Fact]public void Game_names_are_readable(){Assert.Equal("Cyberpunk 2077",GameDiscovery.FriendlyName("Cyberpunk2077.exe"));Assert.Equal("Fallout 4",GameDiscovery.FriendlyName("Fallout4"));Assert.Equal("Jeu installé",GameDiscovery.FriendlyName("unknown-Win64-Shipping","Jeu installé"));}
+    [Fact]public void Presentmon_handles_real_lowercase_column_and_separates_swapchains(){var window=new FpsWindow();var now=DateTimeOffset.UtcNow;window.Add("Application,ProcessID,SwapChainAddress,TimeInSeconds,msBetweenPresents",42,now);window.Add("game.exe,42,A,0.1,10",42,now);window.Add("game.exe,42,A,0.2,10",42,now);window.Add("game.exe,42,A,0.3,10",42,now);window.Add("game.exe,42,B,0.3,1",42,now);window.Add("other.exe,12,A,0.3,2",42,now);Assert.Equal(100,window.Read(now).Fps);Assert.Null(window.Read(now.AddSeconds(4)).Fps);}
+    [Fact]public void Presentmon_invalid_intervals_do_not_create_fake_fps(){var window=new FpsWindow();var now=DateTimeOffset.UtcNow;window.Add("ProcessID,TimeInSeconds,MsBetweenPresents",42,now);foreach(string value in new[]{"0","-1","NaN","Infinity","NA"})window.Add("42,1,"+value,42,now);Assert.Null(window.Read(now).Fps);}
+    [Theory][InlineData(PageId.Weather)][InlineData(PageId.Gaming)][InlineData(PageId.System)]public void Native_ultrawide_frame_fills_both_horizontal_edges(PageId page){using var renderer=new NeonRenderer("missing-assets");using var frame=renderer.Render(page,Snapshot.Empty,new Settings{Width=1920,Height=462,Night=false},DateTime.Now,0);Assert.NotEqual(SKColors.Black,frame.GetPixel(0,220));Assert.NotEqual(SKColors.Black,frame.GetPixel(1919,220));}
+}
