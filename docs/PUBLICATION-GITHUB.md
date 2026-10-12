@@ -1,30 +1,30 @@
-# Préparer la page et le téléchargement
+# Publishing the project and downloads
 
-Dépôt cible : https://github.com/Sandoiitchisan/LOU-Control-Center
+Target repository: https://github.com/Sandoiitchisan/LOU-Control-Center
 
-## Présentation du dépôt
+## Repository presentation
 
-Le README à la racine est la page de présentation. Les images dans docs/images doivent être publiées avec lui.
+The root README is the project landing page. Publish docs/images alongside it. Keep its “What’s new” section and CHANGELOG in sync with each release.
 
-Description courte à coller dans le champ **About** :
+Suggested About description:
 
-> Une application Windows pour vos écrans Thermalright : système, météo, musique, jeux et ambiance. Plusieurs écrans, réglages indépendants et capteurs en lecture seule.
+> A Windows dashboard for Thermalright displays: system, weather, music, gaming and ambient pages. Independent display settings, French/English UI and read-only sensors.
 
-Topics suggérés : `thermalright`, `lcd`, `hardware-monitoring`, `windows`, `aio`, `system-monitor`, `csharp`, `dotnet`.
+Suggested topics: thermalright, lcd, hardware-monitoring, windows, aio, system-monitor, csharp, dotnet.
 
-## Mettre le Setup en téléchargement
+## Publish a release
 
-1. Publier les sources de ce dossier dans le dépôt cible, avec les licences et docs/images.
-2. Dans **Releases**, choisir **Draft a new release**.
-3. Créer le tag **v2.1.0** sur le commit contenant ces sources.
-4. Utiliser le titre **LOU Control Center 2.1.0 — Windows x64** et le texte de docs/RELEASE-2.1.0.md.
-5. Joindre les quatre fichiers de distribution : Setup EXE, ZIP portable, ZIP des sources et SHA256SUMS.txt.
-6. Vérifier les pièces jointes, puis publier la release. Vérifier ensuite le bouton de téléchargement du README.
+1. Publish the matching source commit, licenses and docs/images.
+2. Open **Releases → Draft a new release**.
+3. Create **v2.1.1** on the matching source commit.
+4. Use **LOU Control Center 2.1.1 — French & English** and docs/RELEASE-2.1.1.md.
+5. Attach Setup EXE, portable ZIP, source ZIP and SHA256SUMS.txt.
+6. Verify attachment sizes and hashes, then publish. Check the README download links afterward.
 
-Les URL du README ciblent explicitement le tag v2.1.0 et les noms exacts de ces fichiers. Elles fonctionneront une fois les fichiers joints à la release publiée. Si le dépôt est privé, les visiteurs devront y avoir accès ; un téléchargement destiné à tout le monde nécessite un dépôt public.
+The README uses the explicit release tag and exact asset names. Packages belong in Release attachments, never Git history. Automatic “Source code” archives are not ready-to-run applications. Public downloads require a public repository.
 
-Le Setup et le ZIP portable sont des pièces jointes de Release. Ne pas les ajouter à l’historique Git ni utiliser les archives automatiques « Source code » comme application à lancer.
+The update checker recognizes stable three-part version tags, with an optional v prefix. Keep these names: LOU-Control-Center-Setup-X.Y.Z-win-x64.exe and LOU-Control-Center-Portable-X.Y.Z-win-x64.zip. Publish only after both packages are uploaded. Drafts and prereleases are not offered.
 
-Les fichiers de distribution ont été préparés dans `artifacts/publication-v2.1.0` de la copie de travail. Ce dossier est ignoré par Git.
+Local publication bundles are kept under ignored artifacts/publication-vX.Y.Z folders.
 
-Documentation : [créer une release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) et [liens directs vers les fichiers](https://docs.github.com/en/repositories/releasing-projects-on-github/linking-to-releases).
+GitHub documentation: [managing releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) and [direct asset links](https://docs.github.com/en/repositories/releasing-projects-on-github/linking-to-releases).

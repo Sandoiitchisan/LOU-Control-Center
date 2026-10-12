@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Lou.Core;
 namespace Lou.Providers;
 public sealed record City(int Id,string Name,string Region,string Country,double Latitude,double Longitude)
 {
@@ -12,7 +13,7 @@ public sealed class CityProvider:IDisposable
     public async Task<City[]> SearchAsync(string query,CancellationToken ct)
     {
         if(query.Trim().Length<2)return [];
-        using var response=await http.GetAsync("https://geocoding-api.open-meteo.com/v1/search?name="+Uri.EscapeDataString(query.Trim())+"&count=10&language=fr&format=json",ct);
+        using var response=await http.GetAsync("https://geocoding-api.open-meteo.com/v1/search?name="+Uri.EscapeDataString(query.Trim())+"&count=10&language="+(Localizer.Language==AppLanguage.English?"en":"fr")+"&format=json",ct);
         response.EnsureSuccessStatusCode();using var json=JsonDocument.Parse(await response.Content.ReadAsStringAsync(ct));
         if(!json.RootElement.TryGetProperty("results",out var results))return [];
         string Text(JsonElement r,string key)=>r.TryGetProperty(key,out var x)?x.GetString()??"":"";

@@ -7,12 +7,12 @@
 A Windows application that transforms your Thermalright PC case and AIO displays into customizable dashboards.
 
 ![Windows 10 and 11 x64](https://img.shields.io/badge/Windows-10%20%7C%2011%20x64-0078D4?style=flat-square)
-![Version 2.1.0](https://img.shields.io/badge/version-2.1.0-68E4CF?style=flat-square)
+![Version 2.1.1](https://img.shields.io/badge/version-2.1.1-68E4CF?style=flat-square)
 [![GPL-3.0 License](https://img.shields.io/badge/license-GPL--3.0-9B5CFF?style=flat-square)](LICENSE)
 
-[![Download for Windows — Standalone x64 Installer](docs/images/telecharger.svg)](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.0/LOU-Control-Center-Setup-2.1.0-win-x64.exe)
+[![Download for Windows — Standalone x64 Installer](docs/images/telecharger.svg)](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.1/LOU-Control-Center-Setup-2.1.1-win-x64.exe)
 
-[Portable version](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.0/LOU-Control-Center-Portable-2.1.0-win-x64.zip) · [Release notes](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.1.0) · [Installation guide](docs/INSTALLATION.md)
+[Portable version](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.1/LOU-Control-Center-Portable-2.1.1-win-x64.zip) · [Release notes](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.1.1) · [Installation guide](docs/INSTALLATION.md)
 
 </div>
 
@@ -26,7 +26,16 @@ CPU temperature, currently playing music, weather forecasts, or gaming performan
 
 Use an AIO display, a larger case display, or both simultaneously. Choose which pages to show and how often they rotate. Each display maintains its own independent settings, all managed through a unified interface.
 
-> **Language:** The application currently supports **French only**. English localization is the next development priority. See the [roadmap](#roadmap).
+> **Languages:** French and English are included in the same app. Choose **Settings → Language → English / Français**, then **Save and apply**. The interface and your displays switch together.
+
+## What’s new in 2.1.1
+
+- **French + English:** one application, with a language selector in Settings. Both ultrawide and compact display layouts are translated too.
+- **Built-in update checks:** an optional check at startup and a **Check now** button look for newer stable GitHub releases. LOU offers the correct installer or portable ZIP in your browser; it never installs updates automatically.
+- **A smooth upgrade:** existing sensor assignments, custom names, display profiles and page intervals are kept. Existing configurations stay in French until you choose otherwise.
+- **English documentation and a bilingual installer**, plus a fix for decimal input when switching languages.
+
+[Full changelog](CHANGELOG.md) · [2.1.1 release notes](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.1.1)
 
 ## Five pages for your everyday needs
 
@@ -65,9 +74,9 @@ A dedicated view for CPU temperature and cooling information is also available.
 
 ### Windows installer — Recommended
 
-[Download the standalone 2.1.0 installer for Windows x64](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.0/LOU-Control-Center-Setup-2.1.0-win-x64.exe)
+[Download the standalone 2.1.1 installer for Windows x64](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.1/LOU-Control-Center-Setup-2.1.1-win-x64.exe)
 
-**The installer includes the required components**: the .NET runtime, monitoring tools, the official signed PawnIO installer for hardware sensors, and visual assets. No additional downloads are required to install these components. An internet connection is still required for weather updates.
+**The installer includes the required components**: the .NET runtime, monitoring tools, the official signed PawnIO installer for hardware sensors, and visual assets. No additional downloads are required to install these components. An internet connection is still required for weather and GitHub update checks.
 
 1. Close TRCC and any other software currently using your Thermalright displays.
 2. Run the installer and approve the Windows permission prompt. Starting with Windows is offered as an optional setting.
@@ -77,11 +86,11 @@ A dedicated view for CPU temperature and cooling information is also available.
 
 The application then runs with standard user permissions. Advanced sensor monitoring is handled by the background component installed during setup.
 
-> The LOU installer is not yet publisher-signed, so Windows may display a reputation warning. Included third-party components are their official signed versions. File checksums are available in [SHA256SUMS.txt](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.0/SHA256SUMS.txt).
+> The LOU installer is not yet publisher-signed, so Windows may display a reputation warning. Included third-party components are their official signed versions. File checksums are available in [SHA256SUMS.txt](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.1/SHA256SUMS.txt).
 
 ### Portable version
 
-[Download the portable 2.1.0 ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.0/LOU-Control-Center-Portable-2.1.0-win-x64.zip), extract its entire contents into a writable folder, and launch `Lou.ControlCenter.exe`.
+[Download the portable 2.1.1 ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.1/LOU-Control-Center-Portable-2.1.1-win-x64.zip), extract its entire contents into a writable folder, and launch `Lou.ControlCenter.exe`.
 
 Settings and images remain in the `Data` folder. LOU does not create a persistent background task in portable mode. Advanced sensor monitoring may require Windows administrator approval and the installation of PawnIO if it is not already present. Once enabled, this temporary monitoring component stops when the application closes.
 
@@ -124,17 +133,13 @@ Own another Thermalright display? Open a [GitHub Issue](https://github.com/Sando
 
 ## Roadmap
 
-The following features are planned in development priority order. **None of them are included in version 2.1.0.**
+The following features are planned in development priority order. **None of them are included in version 2.1.1.**
 
-### 1. English localization — Next priority
-
-LOU Control Center currently supports **French only**. The next development step is English localization to make the application accessible to an international audience.
-
-### 2. MP4 video backgrounds
+### 1. MP4 video backgrounds
 
 Support for **MP4 videos as animated display backgrounds**, allowing users to customize their screens with video loops instead of static images, while keeping the interface responsive.
 
-### 3. PC RGB lighting control
+### 2. PC RGB lighting control
 
 Planned **PC RGB lighting management**, with the goal of bringing display customization and lighting controls together in a unified application.
 
@@ -142,13 +147,19 @@ Planned **PC RGB lighting management**, with the goal of bringing display custom
 
 ## Project status
 
-Version 2.1.0 has passed **109 automated tests**. Installation, repair, launching without administrator privileges, and uninstallation have been verified on the reference PC. During simultaneous testing, the two displays achieved approximately **24 FPS** and **10 FPS**, respectively.
+Version 2.1.1 has passed **145 automated tests**, including French/English switching, settings compatibility and update checking. Its standalone preview was tested in both languages. The 2.1.1 installer, standard-user launch, sensor collection, settings preservation and uninstallation were verified on the reference PC. Simultaneous display testing achieved approximately **24 FPS** and **10 FPS**, respectively. Repair was also verified for 2.1.0.
 
 These results apply to the tested hardware. Further testing on clean Windows installations, different graphics cards, and additional displays will help expand compatibility validation. Frame rates depend on the display model and configuration.
 
 Testing with another display? Feedback through [GitHub Issues](https://github.com/Sandoiitchisan/LOU-Control-Center/issues), including the exact model and observed behavior, will help document compatibility. Please remove any personal identifiers from screenshots and logs before submitting them.
 
 [Validation report](docs/VALIDATION.md)
+
+## Built with AI, refined on real hardware
+
+Yes — this is a **vibe-coded project**. LOU Control Center was built with substantial help from OpenAI Codex, starting with a very practical goal: make the displays in a real PC useful, attractive and easy to manage.
+
+AI helped turn ideas into working software quickly; hands-on testing and user feedback shaped the result. That does not make the code infallible or guarantee support for every PC. The source is open, the tests and known limits are documented, and bug reports, code reviews and contributions are welcome. The aim is simple: be honest about how it was made, and keep making it better.
 
 ## Development and contributions
 

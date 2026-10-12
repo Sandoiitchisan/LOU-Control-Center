@@ -1,9 +1,11 @@
-# Sécurité
+# Security
 
-Le collecteur installé s’exécute avec les droits système pour accéder aux capteurs et à ETW. Il utilise uniquement des commandes et emplacements fixes protégés dans Program Files et ProgramData. Il ne doit jamais charger une commande, un script, une bibliothèque ou une adresse fournie par les réglages utilisateur.
+The installed collector runs with system privileges to access sensors and ETW. It uses only fixed commands and protected locations in Program Files and ProgramData. It must never load a command, script, library or address supplied by user settings.
 
-Aucune écriture des courbes de ventilation, des réglages GPU ou du firmware LCD. Aucun mode non signé de PawnIO, aucune désactivation des protections de pilotes Windows.
+No fan curve, GPU configuration or LCD firmware writes. No unsigned PawnIO mode and no disabling Windows driver protections.
 
-Avant publication, activer les signalements privés de vulnérabilités dans les paramètres du dépôt GitHub. Utiliser ensuite l’onglet Security du dépôt pour transmettre un problème sensible. Ne jamais publier de clés, de fichiers de configuration personnels ou d’identifiants de machine.
+Enable private vulnerability reporting in the GitHub repository settings before publication. When available, use the repository’s Security tab to report sensitive issues privately. Never publish keys, personal configuration files or machine identifiers.
 
-Les signatures et empreintes des redistribuables tiers sont vérifiées avant distribution. LOU ne dispose pas encore d’un certificat de signature de code ; un avertissement Windows de réputation peut apparaître.
+Third-party redistributable signatures and hashes are checked before distribution. LOU does not yet have a code-signing certificate; Windows may display a reputation warning.
+
+The update checker makes an anonymous HTTPS request to this repository’s latest stable release endpoint. It compares numeric versions and accepts only exact release/download URLs for this project. It sends no settings, hardware inventory or credentials. Downloading requires a user action; the browser handles the download. No update is executed automatically. A failed check is never reported as proof that the app is up to date.

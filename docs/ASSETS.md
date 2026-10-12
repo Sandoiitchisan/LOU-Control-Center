@@ -1,7 +1,7 @@
-# Décors
+# Backgrounds
 
-Les illustrations city, city-day, music, gaming, ambient et cover ont été créées avec imagegen pour LOU Control Center. Elles représentent des paysages fictifs cyberpunk et ne contiennent aucun chiffre de monitoring préimprimé. Les jauges, valeurs et textes sont dessinés par l’application.
+The city, city-day, music, gaming, ambient and cover illustrations were created with imagegen for LOU Control Center. They depict fictional cyberpunk landscapes without preprinted monitoring values. Gauges, readings and text are drawn by the application.
 
-La pochette cover est réservée aux exemples simulés. En lecture réelle, la pochette provient de la session multimédia Windows ; en son absence, une note musicale centrée est dessinée. Les images personnalisées choisies par l’utilisateur sont copiées dans Data/Backgrounds et restent locales.
+The cover illustration is reserved for simulated examples. During real playback, artwork comes from the Windows media session; if absent, the app draws a centered musical note. User-selected images are copied to Data/Backgrounds and remain local.
 
-Le recadrage préserve les proportions. Les pages carrées possèdent leur propre composition ; elles ne sont pas une réduction du tableau panoramique.
+Cropping preserves proportions. Square pages have their own layouts rather than being scaled-down panoramic dashboards.

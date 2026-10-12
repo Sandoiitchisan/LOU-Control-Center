@@ -1,5 +1,5 @@
-#ifndef AppVersion
-  #define AppVersion "2.1.0"
+﻿#ifndef AppVersion
+  #define AppVersion "2.1.1"
 #endif
 [Setup]
 AppId={{6AC3EEC2-94C8-41F2-92AD-B4C09B989CF0}
@@ -23,14 +23,26 @@ WizardStyle=modern
 CloseApplications=yes
 RestartApplications=no
 LicenseFile=..\..\LICENSE
-InfoBeforeFile=INSTALLATION.txt
 
 [Languages]
-Name: "french"; MessagesFile: "compiler:Languages\French.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"; InfoBeforeFile: "INSTALLATION.txt"
+Name: "french"; MessagesFile: "compiler:Languages\French.isl"; InfoBeforeFile: "INSTALLATION.fr.txt"
+
+[CustomMessages]
+english.Startup=Start LOU automatically when signing in to Windows
+french.Startup=Lancer LOU automatiquement à la connexion Windows
+english.DesktopIcon=Create a desktop shortcut
+french.DesktopIcon=Créer un raccourci sur le Bureau
+english.OpenApp=Open LOU Control Center
+french.OpenApp=Ouvrir LOU Control Center
+english.SensorFailure=Sensors could not be configured. Check %ProgramData%\LouControlCenterUniversal\Sensors\installation.log, then run Setup again.
+french.SensorFailure=Les capteurs n'ont pas pu être configurés. Consultez %ProgramData%\LouControlCenterUniversal\Sensors\installation.log puis relancez cette installation.
+english.StopFailure=Unable to stop the existing sensor collector.
+french.StopFailure=Impossible d'arrêter le collecteur de capteurs existant.
 
 [Tasks]
-Name: "startup"; Description: "Lancer LOU automatiquement à la connexion Windows"; Flags: unchecked
-Name: "desktopicon"; Description: "Créer un raccourci sur le Bureau"
+Name: "startup"; Description: "{cm:Startup}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:DesktopIcon}"
 
 [Files]
 Source: "..\..\artifacts\portable\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "Data\*,Review\*,*.pdb"
@@ -45,7 +57,7 @@ Name: "{autodesktop}\LOU Control Center Universal"; Filename: "{app}\Lou.Control
 Root: HKLM; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "LouControlCenterUniversal"; ValueData: """{app}\Lou.ControlCenter.exe"" --tray"; Tasks: startup; Flags: uninsdeletevalue
 
 [Run]
-Filename: "{app}\Lou.ControlCenter.exe"; Description: "Ouvrir LOU Control Center"; Flags: postinstall nowait runasoriginaluser skipifsilent
+Filename: "{app}\Lou.ControlCenter.exe"; Description: "{cm:OpenApp}"; Flags: postinstall nowait runasoriginaluser skipifsilent
 
 [UninstallRun]
 Filename: "{app}\Lou.ControlCenter.exe"; Parameters: "--shutdown"; Flags: runhidden waituntilterminated; RunOnceId: "CloseUniversalLou"
@@ -61,7 +73,7 @@ begin
     if not Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
       '-NoProfile -ExecutionPolicy Bypass -File "' + ExpandConstant('{app}\setup\Configure-Sensors.ps1') + '"',
       '', SW_HIDE, ewWaitUntilTerminated, Code) or (Code <> 0) then
-      RaiseException('Les capteurs n''ont pas pu être configurés. Consultez %ProgramData%\LouControlCenterUniversal\Sensors\installation.log puis relancez cette installation.');
+      RaiseException(CustomMessage('SensorFailure'));
   end;
 end;
 function NeedRestart(): Boolean;
@@ -80,5 +92,5 @@ begin
     if not Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
       '-NoProfile -ExecutionPolicy Bypass -File "' + ExpandConstant('{app}\setup\Configure-Sensors.ps1') + '" -Remove',
       '', SW_HIDE, ewWaitUntilTerminated, Code) or (Code <> 0) then
-      Result := 'Impossible d''arrêter le collecteur de capteurs existant.';
+      Result := CustomMessage('StopFailure');
 end;

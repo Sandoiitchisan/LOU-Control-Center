@@ -1,30 +1,38 @@
-# Installation et premiers réglages
+# Installation and first setup
 
-Windows 10 version 2004 (19041) ou Windows 11, x64. Un écran Thermalright utilisant un des profils JPEG reconnus est nécessaire pour l’affichage physique ; l’interface reste utilisable sans écran.
+Windows 10 version 2004 (19041) or Windows 11, x64. Physical output requires a Thermalright display with a recognized JPEG profile; the interface can run without a display.
 
-## Installer
+## Install
 
-Lancer le Setup, accepter les droits administrateur, choisir les raccourcis et éventuellement le démarrage Windows. Il installe LOU dans Program Files/LOU Control Center Universal, configure la collecte en lecture seule et ouvre l’application avec les droits ordinaires du compte. Un redémarrage peut être demandé si le composant matériel vient d’être installé.
+Run Setup, accept the administrator prompt, choose shortcuts and optionally enable Windows startup. It installs LOU in Program Files/LOU Control Center Universal, configures read-only collection and opens the app with your account’s ordinary privileges. A restart may be required after the hardware component is first installed.
 
-L’assistant est autonome. Une connexion Internet reste nécessaire pour la météo et sa recherche de ville. La signature éditeur de LOU n’est pas encore disponible ; les empreintes SHA-256 servent à vérifier l’intégrité des fichiers, pas à remplacer une signature de confiance.
+Setup is self-contained. Internet is required for city search, weather and update checks. LOU does not yet have a publisher signature; SHA-256 hashes verify file integrity, not publisher trust.
 
-1. Fermer TRCC et toute autre version de LOU depuis la zone de notification.
-2. Vérifier les appareils, orientations et pages dans **Écrans**. Le délai entre pages est indépendant pour chaque écran.
-3. Dans **Capteurs**, associer radiateur, ventilateurs de boîtier et pompe aux capteurs confirmés par le câblage. Les RPM seuls ne permettent pas d’identifier un connecteur. Les températures et le GPU unique sont détectés automatiquement lorsque disponibles.
-4. Chercher et choisir sa ville dans **Météo**, puis enregistrer.
+1. Exit TRCC and any other LOU edition from the notification area.
+2. Check devices, orientation and pages in **Displays**. Each display has an independent page interval.
+3. In **Sensors**, assign the radiator, case fans and pump using confirmed wiring. RPM alone cannot identify a connector. Temperatures and a single GPU are detected automatically when available.
+4. Find and select your city in **Weather**, then save.
+5. Choose **Settings → Language → English / Français**, then **Save and apply**. The app and both display formats change together. Existing configurations keep French; new configurations follow Windows (French or English fallback).
 
-## Désinstaller ou réparer
+## Updates
 
-Relancer le Setup pour réparer les fichiers et recréer la tâche de collecte. Il conserve les réglages. La désinstallation depuis les applications Windows retire LOU, les raccourcis, son entrée de démarrage et sa tâche de collecte. Les réglages utilisateur et PawnIO sont conservés. PawnIO se désinstalle séparément si aucun autre logiciel ne l’utilise.
+**Settings → Updates** can check GitHub at startup (optional) or on demand. A newer stable release appears in Settings and Overview. The download opens in your browser: Setup for an installed app, ZIP for a portable app. Exit LOU before updating. No installer is run automatically. If no matching package is available, the button opens the release page.
 
-## Diagnostic
+For portable updates, extract the entire ZIP to a new folder, exit the old app, and copy its Data folder into the new one. Keep the old folder until you have verified the update. Do not add `installed.mode` to a portable folder.
 
-- Aucun écran : vérifier le câble USB interne, fermer TRCC, attendre la nouvelle détection. Les appareils `USB/MS_COMP_WINUSB` utilisent automatiquement WinUSB inclus dans Windows. Les variantes différentes peuvent nécessiter leur pilote constructeur. LOU ne change ni leur firmware ni la sécurité des pilotes Windows.
-- Températures ou RPM absents : consulter Capteurs, puis `%ProgramData%/LouControlCenterUniversal/Sensors/installation.log`. Après une installation PawnIO, redémarrer Windows si demandé. Certains composants n’exposent aucune mesure ; LOU affiche une absence, jamais une valeur inventée.
-- FPS absents : dans la version installée, vérifier que `LOU Control Center Universal - Capteurs` fonctionne dans le Planificateur de tâches. La mesure fonctionne via le collecteur, sans devoir exécuter l’interface en administrateur. Un jeu protégé ou une API non observée peut rester indisponible.
-- Réglages : `%LocalAppData%/LouControlCenterUniversal`, avec sauvegarde `settings.json.bak`. Portable : `Data` à côté de l’exécutable.
-- Une autre édition est ouverte : la quitter complètement avant de lancer celle-ci. Les deux versions ne doivent pas écrire simultanément sur les mêmes écrans.
+## Uninstall or repair
+
+Run Setup again to repair files and recreate the collector task. Settings are preserved. Uninstalling through Windows removes LOU, shortcuts, its startup entry and collector task. User settings and PawnIO are retained. Uninstall PawnIO separately if no other application uses it.
+
+## Troubleshooting
+
+- No display: check the internal USB cable, close TRCC and wait for detection. Devices declaring `USB/MS_COMP_WINUSB` use Windows’ built-in WinUSB automatically. Other variants may require their manufacturer’s driver. LOU does not change firmware or driver security settings.
+- Missing temperatures or RPM: check Sensors, then `%ProgramData%/LouControlCenterUniversal/Sensors/installation.log`. Restart Windows if requested after PawnIO installation. Some components expose no reading; LOU shows an absence, never an invented value.
+- Missing FPS: for the installed edition, check that `LOU Control Center Universal - Capteurs` is running in Task Scheduler. This persistent task name is unchanged between languages. The interface does not need administrator privileges. Protected games or unobserved APIs may remain unavailable.
+- Settings: `%LocalAppData%/LouControlCenterUniversal`, with `settings.json.bak` as a backup. Portable: Data beside the executable.
+- Another edition is running: exit it completely before launching this one. Two versions must not write to the same displays at once.
+- Update check unavailable: check your connection and try later. GitHub may rate-limit anonymous requests. This status does not mean you are up to date.
 
 ## Portable
 
-Extraire l’intégralité du ZIP dans un dossier accessible en écriture. Ne pas ajouter le fichier `installed.mode`. Le dossier contient le runtime .NET et les composants. La collecte avancée temporaire requiert une autorisation Windows ; aucun service LOU ni démarrage automatique n’est installé. Les images personnalisées restent dans Data/Backgrounds : copier ce dossier avec la configuration lors d’une migration manuelle.
+Extract the entire ZIP to a writable folder. The .NET runtime and components are included. Temporary advanced collection requires Windows permission; no permanent LOU service or startup entry is installed. Custom images stay in Data/Backgrounds: copy this folder together with settings when migrating manually.

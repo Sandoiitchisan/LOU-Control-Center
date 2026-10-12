@@ -1,35 +1,45 @@
 # Architecture
 
-Le projet est indépendant de l’édition personnelle. Aucune connexion serveur, ville, adresse SSH, association matérielle ou série USB personnelle n’est incluse.
+The project is independent of the personal edition. No server connection, city, SSH address, hardware assignment or personal USB serial is included.
 
-- Core : configuration JSON portable, cinq pages, profils par écran et ordonnanceurs indépendants.
-- Providers : un DataHub partagé collecte les informations du PC, des médias, du jeu et de la météo. LibreHardwareMonitor 0.9.6 fournit températures et ventilateurs AMD/NVIDIA/Intel, avec AMD ADL en complément. Les mesures absentes ne valent jamais zéro.
-- Devices : découverte PnP limitée aux familles USB reconnues, handshake LY/ChiZhu, session sérialisée. Le profil persistant est comparé à chaque reconnexion. Un changement exige une réinitialisation de la détection.
-- Rendering : composition panoramique existante et cinq compositions compactes. Les angles 90/270 changent les dimensions logiques avant rotation physique. Une vue de refroidissement optionnelle est disponible.
-- App : une paire de threads rendu/transport par écran, attente haute résolution annulable, dernière frame uniquement. L’interface prélève l’aperçu à 5 Hz ; elle ne bloque pas les threads de rendu. Les limites demandées ne constituent pas une mesure de FPS réelle.
+- Core: JSON configuration, five pages, per-display profiles and independent schedulers.
+- Providers: one shared DataHub collects PC, media, game and weather information. LibreHardwareMonitor 0.9.6 provides AMD/NVIDIA/Intel temperatures and fan readings, supplemented by AMD ADL. Missing readings never become zero.
+- Devices: PnP discovery limited to recognized USB families, LY/ChiZhu handshake and serialized sessions. Persistent profiles are checked at reconnection; changes require a detection reset.
+- Rendering: panoramic and five compact compositions. 90/270-degree orientation changes logical dimensions before physical rotation. An optional cooling view is available.
+- App: a render/transport thread pair per display, cancellable high-resolution pacing and latest-frame-only buffering. WPF samples previews at 5 Hz without blocking rendering. Requested frame limits are not measured FPS.
 
-## Identité des mesures
+## Reading identity
 
-Une association comprend fournisseur, carte mère, identifiant du contrôleur, identifiant du capteur, nom du matériel et empreinte de topologie. Cette empreinte est dérivée de l’inventaire trié des contrôleurs et des identifiants physiques GPU exposés par la bibliothèque ; elle ne dépend ni des RPM ni de l’ordre d’énumération. Un changement d’inventaire bloque les associations plutôt que de les réaffecter. Les noms de carte mère/Super I/O ne constituent pas une identification des connecteurs : l’utilisateur garde la responsabilité de confirmer le câblage dans le BIOS ou une documentation fiable.
+Assignments include provider, motherboard, controller ID, sensor ID, hardware name and topology fingerprint. The fingerprint comes from sorted controller inventory and physical GPU IDs, never RPM or enumeration order. Inventory changes block assignments instead of silently reassigning them. Motherboard/Super I/O names do not identify headers: users must confirm wiring in the BIOS or reliable documentation.
 
-Les GPU de même modèle sont distingués par DeviceId lorsque la bibliothèque l’expose. Si un fabricant n’expose pas d’identité physique stable, l’application ne prétend pas pouvoir reconnaître un remplacement indiscernable ; l’association reste configurable et doit être vérifiée après un changement matériel.
+Identical GPU models are distinguished by DeviceId when exposed. Without a stable physical identity, the app cannot recognize an indistinguishable replacement; assignments remain configurable and should be checked after hardware changes.
 
-Les paramètres matériels de LibreHardwareMonitor sont fournis par ReadOnlyHardwareSettings : aucun fichier de réglage externe n’est chargé, les contrôles restent Undefined. L’application n’appelle aucune méthode SetDefault / SetSoftware d’un contrôleur matériel.
+ReadOnlyHardwareSettings supplies LibreHardwareMonitor settings: no external settings file is loaded, controls remain Undefined, and no hardware SetDefault / SetSoftware method is called.
 
 ## Isolation
 
-En mode portable, Data est résolu par rapport à l’exécutable, jamais dans le LocalAppData de la version personnelle. La collecte avancée écrit uniquement dans ce dossier et s’arrête avec son parent, dont le PID et l’heure de démarrage sont vérifiés. Le mutex d’affichage est partagé avec l’édition personnelle pour empêcher deux écrivains LCD. Le mode aperçu possède son propre mutex et n’ouvre aucun transport.
+Portable Data is resolved beside the executable, never in the personal edition’s LocalAppData. Advanced collection writes only there and stops with its parent, whose PID and start time are checked. The display mutex is shared with the personal edition to prevent two LCD writers. Preview uses its own mutex and opens no transport.
 
-La fermeture par la croix peut réduire dans la zone de notification ; Quitter arrête les boucles, libère les transports et coupe PresentMon. Aucun démarrage Windows ou service permanent n’est créé par la version portable.
+Closing the window may minimize to the notification area. Exit stops loops, releases transports and stops PresentMon. The portable edition creates no Windows startup entry or permanent service.
 
-## Météo
+## Weather
 
-Recherche HTTPS explicite par nom via geocoding-api.open-meteo.com. L’utilisateur choisit une ville avec région/pays ; seules les coordonnées de ce choix sont utilisées en interne. L’API forecast est appelée toutes les 20 minutes avec cache local, délai de nouvelle tentative et respect de Retry-After. Attribution Open-Meteo et GeoNames. Aucun compte ni clé API.
+Explicit HTTPS city-name search through geocoding-api.open-meteo.com. Users choose a city with region/country; only that selection’s coordinates are used internally. Forecast requests run every 20 minutes with caching, retry delay and Retry-After handling. Open-Meteo and GeoNames attribution is retained. No account or API key.
 
-## Installation Windows
+## Windows installation
 
-Le marqueur `installed.mode`, ajouté uniquement par Inno Setup, sélectionne le stockage `%LocalAppData%/LouControlCenterUniversal`. Les chemins relatifs Data/Backgrounds sont résolus contre cette racine ; le répertoire Program Files reste immuable. Le portable conserve son stockage et son collecteur temporaires.
+The installed.mode marker, added only by Inno Setup, selects %LocalAppData%/LouControlCenterUniversal. Relative Data/Backgrounds paths resolve against that root; Program Files stays immutable. Portable storage and collection remain temporary and local.
 
-Une tâche SYSTEM démarre le même exécutable protégé dans Program Files avec `--sensor-collector --machine`. Sa commande est fixe et ne charge aucune configuration utilisateur. Le collecteur écrit des instantanés bornés dans ProgramData/LouControlCenterUniversal/Sensors, accessible en lecture seule aux utilisateurs standards. Il lit les capteurs et exécute PresentMon dans un job Windows qui arrête le processus enfant quand le collecteur disparaît. La session ETW porte un nom spécifique à cette édition. Aucun groupe de sécurité du compte utilisateur n’est modifié. Les mesures des présentations ne contiennent ni nom de fenêtre ni contenu affiché et deviennent invalides après cinq secondes.
+A SYSTEM task launches the protected Program Files executable with --sensor-collector --machine. Its fixed command loads no user configuration. It writes bounded snapshots to ProgramData/LouControlCenterUniversal/Sensors, read-only for standard users. PresentMon runs in a Windows job that kills the child when the collector exits, using an edition-specific ETW session. User security-group membership is unchanged. Presentation readings contain no window names or displayed content and expire after five seconds.
 
-L’installateur et sa désinstallation arrêtent uniquement cette tâche et cette session. L’événement de fermeture de l’interface est spécifique à l’édition universelle ; le mutex USB reste partagé avec l’édition personnelle. Les paramètres, données et tâches de cette dernière restent indépendants.
+Setup and uninstallation stop only this task and session. The interface shutdown event is universal-edition-specific; the USB mutex remains shared with the personal edition. The latter’s settings, data and tasks stay independent.
+
+## Localization
+
+French and English share one executable and configuration schema. Old settings default to French; new configurations use the Windows language with English fallback. Embedded Core catalogs supply WPF dynamic resources and renderer labels. A scoped language context isolates concurrent display workers. Numeric input uses the selected culture explicitly rather than the dispatcher’s inherited culture.
+
+Provider status text is translated at the presentation boundary. User labels, media/game metadata and physical identities are preserved. Default fan labels remain translatable rather than being saved as custom names. Language changes update existing workers without resetting their USB identity or page interval.
+
+## Release updates
+
+The interface checks the public GitHub latest-release endpoint asynchronously, once per launch automatically if enabled, plus manual requests. A 12-second timeout and 1 MiB response limit bound requests. Only valid newer stable three-part versions trigger an offer. Exact repository URLs and package names are checked; missing assets fall back to the validated release page. Installed apps select Setup, portable apps select ZIP. There is no automatic download, installation, elevation or collector-side check. Preview skips automatic checks; UI validation may explicitly exercise a manual check.

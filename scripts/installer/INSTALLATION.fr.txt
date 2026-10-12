@@ -1,0 +1,11 @@
+﻿LOU Control Center
+
+Cet assistant installe l’application, son moteur .NET autonome, les outils de mesure et les illustrations. Aucun téléchargement supplémentaire n’est nécessaire pour ces composants.
+
+La lecture avancée des capteurs utilise le composant officiel signé PawnIO (installé si nécessaire) et une tâche de collecte en arrière-plan, avec les droits système. Elle lit les températures, vitesses et cadences de présentation des applications, sans enregistrer le contenu affiché ni les frappes clavier. Cette collecte ne modifie jamais les courbes de ventilation.
+
+Au premier lancement, choisissez votre ville et associez vos ventilateurs et votre pompe aux capteurs réels. Les écrans compatibles sont détectés automatiquement. Fermez TRCC et toute autre version de LOU avant de lancer cette application.
+
+Le pilote Microsoft WinUSB est déjà fourni par Windows. Les écrans qui annoncent cette compatibilité sont reconnus automatiquement. Les autres variantes matérielles peuvent nécessiter leur pilote constructeur ; les modèles non reconnus sont signalés dans l’application.
+
+Le démarrage automatique est facultatif. La désinstallation retire LOU et sa tâche de collecte. Vos réglages sont conservés. PawnIO, composant partagé avec d’autres logiciels, reste installé et peut être retiré séparément dans les applications Windows.

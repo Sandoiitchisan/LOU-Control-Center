@@ -1,52 +1,50 @@
-# LOU Control Center 2.1.0 — Vos informations, sur vos écrans Thermalright
+# LOU Control Center 2.1.0 — Your information, on your Thermalright displays
 
-Transformez les écrans de votre boîtier et de votre AiO Thermalright en tableaux de bord : système, météo, musique, jeux et ambiance, dans une seule application Windows.
+Turn your Thermalright case and AiO screens into dashboards for system monitoring, weather, music, gaming and ambient visuals, in one Windows app.
 
-## Télécharger
+## Download
 
-**Pour la plupart des utilisateurs : [télécharger le Setup Windows x64](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.0/LOU-Control-Center-Setup-2.1.0-win-x64.exe).**
+**Recommended: [self-contained Windows x64 Setup](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.0/LOU-Control-Center-Setup-2.1.0-win-x64.exe).**
 
-Le Setup est **autonome** : le moteur .NET, les outils de mesure, le composant officiel de lecture des capteurs et les illustrations sont inclus. Il installe l’application, ses raccourcis et la collecte des capteurs ; le démarrage avec Windows est facultatif. Internet reste nécessaire pour rechercher une ville et actualiser la météo.
+Setup includes the .NET runtime, monitoring tools, official sensor component and artwork. It installs the app, shortcuts and sensor collector; Windows startup is optional. Internet is needed for city search and weather.
 
-Vous préférez conserver l’application dans un dossier ? [Télécharger la version portable](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.0/LOU-Control-Center-Portable-2.1.0-win-x64.zip), extraire entièrement le ZIP, puis ouvrir `Lou.ControlCenter.exe`.
+Prefer a folder-based app? [Download the portable ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.0/LOU-Control-Center-Portable-2.1.0-win-x64.zip), extract everything and run Lou.ControlCenter.exe.
 
-## Ce que vous pouvez afficher
+## Features
 
-- **Système** : charge CPU/GPU/RAM, températures, débits réseau en Mo/s et vitesses de ventilation disponibles.
-- **Météo** : conditions actuelles et prévisions, à partir de votre ville, sans clé API.
-- **Musique** : lecture en cours et informations transmises par les lecteurs compatibles Windows.
-- **Jeux** : détection de l’activité de jeu et cadence de présentation via PresentMon.
-- **Ambiance** : horloge et décors pour un affichage plus discret.
+- System: CPU/GPU/RAM load, temperatures, network throughput in MB/s and available fan speeds.
+- Weather: current conditions and forecasts for your city, without an API key.
+- Music: now-playing information from compatible Windows media players.
+- Gaming: graphics-activity detection and presentation rate through PresentMon.
+- Ambient: clock and subtle decorative backgrounds.
 
-Les cinq pages existent sur les écrans panoramiques et compacts. Chaque écran conserve son choix de pages, son délai, ses transitions et son orientation. Une vue dédiée au refroidissement est également disponible.
+All five pages support ultrawide and compact displays. Each display has independent pages, timing, transitions and orientation. A dedicated cooling view is also available.
 
-## Première utilisation
+## First launch
 
-1. Fermez TRCC ou tout autre logiciel qui utilise les mêmes écrans.
-2. Installez et ouvrez LOU Control Center.
-3. Vérifiez vos appareils et leur orientation dans **Écrans**.
-4. Associez vos ventilateurs et votre pompe à leurs capteurs dans **Capteurs**.
-5. Choisissez votre ville dans **Météo**, puis enregistrez.
+1. Exit TRCC or other software using the same displays.
+2. Install and open LOU Control Center.
+3. Check devices and orientation in Displays (Écrans).
+4. Assign fan and pump sensors in Sensors (Capteurs).
+5. Select a city in Weather (Météo), then save.
 
-Le monitoring reste en lecture seule : vos courbes de ventilation restent gérées par le BIOS et les logiciels habituels.
+Version 2.1.0’s interface is French. Monitoring is read-only: BIOS and existing software retain control of fan curves.
 
-## Compatibilité et état de validation
+## Compatibility and validation
 
-Windows 10 version 2004 minimum ou Windows 11, x64. Les familles Thermalright LY et ChiZhu avec profils JPEG reconnus sont prises en charge. Des essais physiques ont été réalisés simultanément sur des écrans 1920 × 462 et 480 × 480. Les autres modèles nécessitent une validation ; la marque seule ne garantit pas la compatibilité.
+Windows 10 version 2004 or later / Windows 11, x64. Recognized JPEG profiles in the Thermalright LY and ChiZhu families are supported. Physical tests used simultaneous 1920 × 462 and 480 × 480 displays. Other models require validation; brand alone does not establish compatibility.
 
-109 tests automatisés passent. Installation, réparation, lancement sans droits administrateur et désinstallation ont été vérifiés sur le PC de référence. L’installation sur Windows vierge reste à valider. La prise en charge NVIDIA existe via LibreHardwareMonitor, mais n’a pas encore été testée sur une carte physique.
+109 automated tests passed. Installation, repair, non-administrator launch and uninstallation were verified on the reference PC. Clean Windows installation remains unverified. NVIDIA support exists through LibreHardwareMonitor but has not been tested on a physical NVIDIA card.
 
-L’installateur LOU n’est pas encore signé avec un certificat éditeur : Windows peut afficher un avertissement de réputation. Les redistribuables tiers sont leurs versions officielles signées. Les empreintes des téléchargements figurent dans `SHA256SUMS.txt`.
+LOU Setup is not publisher-signed: Windows may show a reputation warning. Third-party redistributables are official signed versions. Download hashes are in SHA256SUMS.txt. Key-free Open-Meteo access is for non-commercial use within service quotas.
 
-L’accès météo Open-Meteo sans clé est destiné aux usages non commerciaux, dans les quotas du service.
+## Files
 
-## Fichiers de cette version
-
-| Fichier | Utilisation |
+| File | Purpose |
 |---|---|
-| `LOU-Control-Center-Setup-2.1.0-win-x64.exe` | Installation Windows recommandée |
-| `LOU-Control-Center-Portable-2.1.0-win-x64.zip` | Application à extraire dans un dossier |
-| `LOU-Control-Center-Sources-2.1.0.zip` | Sources du projet et licences |
-| `SHA256SUMS.txt` | Empreintes de vérification |
+| LOU-Control-Center-Setup-2.1.0-win-x64.exe | Recommended Windows installation |
+| LOU-Control-Center-Portable-2.1.0-win-x64.zip | Extract-and-run application |
+| LOU-Control-Center-Sources-2.1.0.zip | Corresponding sources and licenses |
+| SHA256SUMS.txt | Integrity hashes |
 
-Projet libre sous GPL-3.0, indépendant de Thermalright. Les retours accompagnés du modèle exact de votre écran sont les bienvenus dans les Issues.
+Independent GPL-3.0 project, unaffiliated with Thermalright. Feedback with the exact display model is welcome in Issues.

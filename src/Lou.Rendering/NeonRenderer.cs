@@ -25,6 +25,7 @@ public sealed class NeonRenderer : IDisposable
     public NeonRenderer(string assets){assetRoot=assets;}
     public SKBitmap Render(PageId page,Snapshot d,Settings s,DateTime now,double elapsed)
     {
+        using var language=Localizer.Use(s.Language);d=Localizer.Present(d,s);
         if(historyDemo!=d.Demo){down.Clear();up.Clear();historySecond=-1;historyDemo=d.Demo;}
         var bitmap=new SKBitmap(s.Width,s.Height,SKColorType.Bgra8888,SKAlphaType.Premul);
         using var c=new SKCanvas(bitmap);c.Clear(SKColors.Black);
@@ -35,7 +36,7 @@ public sealed class NeonRenderer : IDisposable
         var file=s.Backgrounds.TryGetValue(page,out var path)&&File.Exists(ConfigStore.ResolveBackground(path))?ConfigStore.ResolveBackground(path):Path.Combine(assetRoot,bg+".png");
         var image=Load(file);
         if(image!=null)DrawCover(c,image,new(0,0,canvasWidth,480));
-        else {Fill(c,new(0,0,canvasWidth,480),new(8,13,28));Text(c,"Décor manquant : "+bg,40,450,24,Pink);}
+        else {Fill(c,new(0,0,canvasWidth,480),new(8,13,28));Text(c,Localizer.T("Décor manquant : ")+bg,40,450,24,Pink);}
         if(page==PageId.Weather&&!s.Backgrounds.ContainsKey(page)){
             float target=d.Weather.IsDay?1:0;float step=(float)Math.Clamp(elapsed-lastWeatherTime,0,.2)/3;lastWeatherTime=elapsed;
             weatherDay=weatherDay<0?target:Math.Clamp(weatherDay+Math.Sign(target-weatherDay)*step,0,1);
@@ -46,9 +47,9 @@ public sealed class NeonRenderer : IDisposable
         if(historySecond!=(int)elapsed){historySecond=(int)elapsed;down.Enqueue(d.Pc.Download);up.Enqueue(d.Pc.Upload);foreach(var queue in new[]{down,up})while(queue.Count>80)queue.Dequeue();}
         switch(page){case PageId.System:SystemPage(c,d,now);break;case PageId.Weather:WeatherPage(c,d,t);break;case PageId.Music:MusicPage(c,d,t);break;case PageId.Gaming:GamingPage(c,d);break;case PageId.Ambient:AmbientPage(c,d,now,t);break;}
         Frame(c,t);
-        if(s.ShowDiagnostics){Fill(c,new(580,12,1380,48),new SKColor(3,9,20,235));Text(c,$"TEST : {s.UsbFps} FPS demandés • SLIDE • JPEG {s.JpegQuality}",608,38,21,cyan);}
+        if(s.ShowDiagnostics){Fill(c,new(580,12,1380,48),new SKColor(3,9,20,235));Text(c,Localizer.F($"TEST : {s.UsbFps} FPS demandés • SLIDE • JPEG {s.JpegQuality}"),608,38,21,cyan);}
         if(s.IsNight(now))Fill(c,new(0,0,canvasWidth,480),new(0,0,12,75));
-        Text(c,d.Demo?"DÉMONSTRATION • DONNÉES SIMULÉES":"LOU // CONTROL CENTER",34,465,15,d.Demo?Pink:Muted);
+        Text(c,d.Demo?Localizer.T("DÉMONSTRATION • DONNÉES SIMULÉES"):"LOU // CONTROL CENTER",34,465,15,d.Demo?Pink:Muted);
         Text(c,"NEON CITY   /   "+((int)page+1).ToString("00"),canvasWidth-210,465,14,Muted);
         return bitmap;
     }
@@ -60,18 +61,18 @@ public sealed class NeonRenderer : IDisposable
     }
     private void SystemPage(SKCanvas c,Snapshot d,DateTime now)
     {
-        Panel(c,40,42,575,385,.55f);Text(c,now.ToString("ddd, dd MMM yyyy",CultureInfo.GetCultureInfo("fr-FR")).ToUpperInvariant(),74,102,29,cyan);
+        Panel(c,40,42,575,385,.55f);Text(c,now.ToString("ddd, dd MMM yyyy",Localizer.Culture).ToUpperInvariant(),74,102,29,cyan);
         Text(c,now.ToString("HH:mm"),65,261,150,cyan,glowing:true);Text(c,now.ToString("ss"),479,260,40,White);
-        Text(c,"CPU  /  GPU  /  MÉMOIRE",78,324,25,Green);
-        Text(c,d.Pc.CpuTemp is >=90||d.Pc.GpuTemp is >=95?"TEMPÉRATURE ÉLEVÉE":"SURVEILLANCE DU SYSTÈME",78,386,26,d.Pc.CpuTemp is >=90?Pink:Green);
+        Text(c,Localizer.T("CPU  /  GPU  /  MÉMOIRE"),78,324,25,Green);
+        Text(c,d.Pc.CpuTemp is >=90||d.Pc.GpuTemp is >=95?Localizer.T("TEMPÉRATURE ÉLEVÉE"):Localizer.T("SURVEILLANCE DU SYSTÈME"),78,386,26,d.Pc.CpuTemp is >=90?Pink:Green);
         var p=d.Pc;
-        Gauge(c,764,194,105,"CPU",p.Cpu,p.CpuTemp is {} ct?V(ct,"°C"):"Temp. indisponible",Blue);
-        Gauge(c,1028,194,105,"GPU",p.Gpu,p.GpuTemp is {} gt?V(gt,"°C"):"Temp. indisponible",Pink);
-        Gauge(c,1292,194,105,"RAM",p.RamUsed!=null&&p.RamTotal>0?p.RamUsed/p.RamTotal*100:null,V(p.RamUsed," Go",1),Purple);
+        Gauge(c,764,194,105,"CPU",p.Cpu,p.CpuTemp is {} ct?V(ct,"°C"):Localizer.T("Temp. indisponible"),Blue);
+        Gauge(c,1028,194,105,"GPU",p.Gpu,p.GpuTemp is {} gt?V(gt,"°C"):Localizer.T("Temp. indisponible"),Pink);
+        Gauge(c,1292,194,105,"RAM",p.RamUsed!=null&&p.RamTotal>0?p.RamUsed/p.RamTotal*100:null,V(p.RamUsed,Localizer.T(" Go"),1),Purple);
         CoolingTile(c,651,316,225,FanName(p,FanRole.Radiator),p.CpuFan,cyan);CoolingTile(c,914,316,225,FanName(p,FanRole.Gpu),p.GpuFan,Pink);CoolingTile(c,1177,316,225,FanName(p,FanRole.Pump),p.Pump,Purple);
         CoolingTile(c,651,387,367,FanName(p,FanRole.Rear),p.RearFan,Blue);CoolingTile(c,1035,387,367,FanName(p,FanRole.Bottom),p.BottomFan,cyan);
-        Text(c,"GPU "+V(p.GpuHotspot,"°C")+" (point chaud)   /   "+V(p.GpuPower," W")+"   /   VRAM "+V(p.Vram," Go",1),78,417,17,Muted,maximum:510);
-        Panel(c,1450,47,canvasWidth-1490,378,.6f);Text(c,"RÉSEAU",1482,95,27,cyan);Text(c,"↓ "+V(p.Download," Mo/s",1),1482,149,32,cyan);Text(c,"↑ "+V(p.Upload," Mo/s",1),1482,194,29,White);
+        Text(c,"GPU "+V(p.GpuHotspot,"°C")+Localizer.T(" (point chaud)   /   ")+V(p.GpuPower," W")+"   /   VRAM "+V(p.Vram,Localizer.T(" Go"),1),78,417,17,Muted,maximum:510);
+        Panel(c,1450,47,canvasWidth-1490,378,.6f);Text(c,Localizer.T("RÉSEAU"),1482,95,27,cyan);Text(c,"↓ "+V(p.Download,Localizer.T(" Mo/s"),1),1482,149,32,cyan);Text(c,"↑ "+V(p.Upload,Localizer.T(" Mo/s"),1),1482,194,29,White);
         Chart(c,1480,218,canvasWidth-1550,135,down,cyan);Chart(c,1480,218,canvasWidth-1550,135,up,Pink);Text(c,p.Adapter,1480,395,18,Muted,maximum:canvasWidth-1550);
     }
     private void WeatherPage(SKCanvas c,Snapshot d,double t)
@@ -80,17 +81,17 @@ public sealed class NeonRenderer : IDisposable
         if(rain)Rain(c,t);
         if(w.Code is >=71 and <=77 or 85 or 86)for(int i=0;i<50;i++)Circle(c,(i*137.91f)%1920,(float)((i*83+t*22)%480),2,new SKColor(220,240,255,120));
         float currentX=40,currentW=520,hourX=currentX+currentW+18,dayW=460,dayX=canvasWidth-40-dayW,hourW=dayX-hourX-18;
-        Panel(c,currentX,36,currentW,389,.48f);Text(c,"EN CE MOMENT",currentX+34,84,25,cyan);WeatherIcon(c,currentX+106,188,w.Code,w.IsDay,56);
-        Text(c,V(w.Temperature,"°C"),currentX+190,211,104,White,maximum:296);Text(c,w.Temperature==null?"Indisponible":Condition(w.Code),currentX+34,266,32,White);
-        Text(c,w.Location,currentX+34,312,25,Muted,maximum:currentW-68);Text(c,"Ressenti "+V(w.FeelsLike,"°")+"   •   Vent "+V(w.Wind," km/h"),currentX+34,358,22,Muted,maximum:currentW-65);Text(c,"Humidité "+V(w.Humidity,"%"),currentX+34,393,21,Muted);
-        Panel(c,hourX,36,hourW,389,.48f);Text(c,"PROCHAINES HEURES",hourX+34,84,25,White);
+        Panel(c,currentX,36,currentW,389,.48f);Text(c,Localizer.T("EN CE MOMENT"),currentX+34,84,25,cyan);WeatherIcon(c,currentX+106,188,w.Code,w.IsDay,56);
+        Text(c,V(w.Temperature,"°C"),currentX+190,211,104,White,maximum:296);Text(c,w.Temperature==null?Localizer.T("Indisponible"):Condition(w.Code),currentX+34,266,32,White);
+        Text(c,w.Location,currentX+34,312,25,Muted,maximum:currentW-68);Text(c,Localizer.T("Ressenti ")+V(w.FeelsLike,"°")+Localizer.T("   •   Vent ")+V(w.Wind," km/h"),currentX+34,358,22,Muted,maximum:currentW-65);Text(c,Localizer.T("Humidité ")+V(w.Humidity,"%"),currentX+34,393,21,Muted);
+        Panel(c,hourX,36,hourW,389,.48f);Text(c,Localizer.T("PROCHAINES HEURES"),hourX+34,84,25,White);
         var hours=w.Hours??[];
         float hourCell=(hourW-40)/6;
         for(int i=0;i<Math.Min(hours.Length,6);i++){float x=hourX+20+hourCell*(i+.5f);Text(c,hours[i].Time.ToString("HH:mm"),x,146,23,Muted,center:true);WeatherIcon(c,x,214,hours[i].Code,hours[i].Time.Hour is >=7 and <20,30);Text(c,V(hours[i].Temperature,"°"),x,291,33,White,center:true);Text(c,V(hours[i].Rain,"%"),x,334,21,cyan,center:true);if(i>0)Line(c,x-hourCell/2,120,x-hourCell/2,355,new(60,120,145,65));}
-        if(hours.Length==0)Text(c,"Prévisions indisponibles",hourX+34,234,27,Muted);
-        Text(c,w.Updated is {} stamp?"Mise à jour "+stamp.ToLocalTime().ToString("dd/MM HH:mm")+" • "+w.Status:w.Status,hourX+34,392,18,Muted,maximum:hourW-68);
-        Panel(c,dayX,36,dayW,389,.52f);Text(c,"LES TROIS PROCHAINS JOURS",dayX+28,84,22,White);
-        var days=w.Days??[];for(int i=0;i<Math.Min(3,days.Length);i++){float x=dayX+24+(dayW-48)/3*(i+.5f);Text(c,days[i].Time.ToString("ddd",CultureInfo.GetCultureInfo("fr-FR")).ToUpperInvariant(),x,149,23,Muted,center:true);WeatherIcon(c,x,216,days[i].Code,true,30);Text(c,V(days[i].Temperature,"°"),x,291,36,White,center:true);Text(c,V(days[i].Low,"°"),x,337,25,Muted,center:true);}
+        if(hours.Length==0)Text(c,Localizer.T("Prévisions indisponibles"),hourX+34,234,27,Muted);
+        Text(c,w.Updated is {} stamp?Localizer.T("Mise à jour ")+stamp.ToLocalTime().ToString("dd/MM HH:mm")+" • "+w.Status:w.Status,hourX+34,392,18,Muted,maximum:hourW-68);
+        Panel(c,dayX,36,dayW,389,.52f);Text(c,Localizer.T("LES TROIS PROCHAINS JOURS"),dayX+28,84,22,White);
+        var days=w.Days??[];for(int i=0;i<Math.Min(3,days.Length);i++){float x=dayX+24+(dayW-48)/3*(i+.5f);Text(c,days[i].Time.ToString("ddd",Localizer.Culture).ToUpperInvariant(),x,149,23,Muted,center:true);WeatherIcon(c,x,216,days[i].Code,true,30);Text(c,V(days[i].Temperature,"°"),x,291,36,White,center:true);Text(c,V(days[i].Low,"°"),x,337,25,Muted,center:true);}
         Text(c,"Open-Meteo • CC BY 4.0",dayX+28,395,18,Muted);
     }
     private void MusicPage(SKCanvas c,Snapshot d,double t)
@@ -100,11 +101,11 @@ public sealed class NeonRenderer : IDisposable
         var art=cover??(d.Demo?Load(Path.Combine(assetRoot,"cover.png")):null);
         if(art!=null)DrawCover(c,art,new(54,50,403,399));else{using var p=new SKPaint{IsAntialias=true,Style=SKPaintStyle.Stroke,StrokeWidth=3,Color=Pink};for(int i=0;i<5;i++)c.DrawCircle(229,224,55+i*19,p);CenterText(c,"♫",229,224,110,White);}
         float right=canvasWidth-75,center=(480+right)/2;
-        Panel(c,440,46,canvasWidth-485,375,.33f);Text(c,m.Playing?"ÉCOUTE EN COURS":m.Available?"LECTURE EN PAUSE":"MUSIQUE",475,99,28,Pink);
+        Panel(c,440,46,canvasWidth-485,375,.33f);Text(c,m.Playing?Localizer.T("ÉCOUTE EN COURS"):m.Available?Localizer.T("LECTURE EN PAUSE"):Localizer.T("MUSIQUE"),475,99,28,Pink);
         Text(c,m.Title,475,165,52,White,maximum:canvasWidth-570);Text(c,m.Artist,476,208,31,cyan,maximum:canvasWidth-570);Text(c,m.Album,476,245,22,Muted,maximum:canvasWidth-1040);
         // Decorative equalizer only, deliberately labelled.
         if(m.Playing)for(int i=0;i<45;i++){float h=(float)(12+Math.Abs(Math.Sin(i*.63+t*2))*42);Fill(c,new(right-370+i*8,302-h,right-366+i*8,302),Pink.WithAlpha((byte)(120+i%5*20)));}
-        Text(c,"VISUEL DÉCORATIF",right-180,242,14,Muted);
+        Text(c,Localizer.T("VISUEL DÉCORATIF"),right-180,242,14,Muted);
         Line(c,480,310,right,310,new(55,82,104));float progress=m.Duration>0?(float)Math.Clamp(m.Position/m.Duration,0,1):0;Line(c,480,310,480+(right-480)*progress,310,cyan,5);Circle(c,480+(right-480)*progress,310,6,cyan);
         Text(c,Time(m.Position),480,342,20,White);Text(c,Time(m.Duration),right-55,342,20,White);
         CenterText(c,"‹‹",center-160,378,39,White);Circle(c,center,378,35,Pink,true,2);
@@ -115,25 +116,25 @@ public sealed class NeonRenderer : IDisposable
     private void GamingPage(SKCanvas c,Snapshot d)
     {
         var g=d.Gaming;float statX=canvasWidth*.52f,statW=(canvasWidth-statX-58)/2;
-        Panel(c,40,36,statX-58,244,.38f);Text(c,g.Active?"JEU EN COURS":"JEUX / EN ATTENTE",74,84,26,cyan);Text(c,g.Name,74,146,49,White,maximum:statX-130);
-        Text(c,g.Active?"SURVEILLANCE DES PERFORMANCES":"Lance un jeu pour suivre ses performances",74,217,25,cyan,maximum:statX-130);
-        Panel(c,statX,36,statW,244,.65f);Text(c,"IMAGES PAR SECONDE",statX+30,90,24,Muted);CenterText(c,V(g.Fps,""),statX+statW/2,185,108,cyan);
-        Panel(c,statX+statW+18,36,statW,244,.65f);Text(c,"TEMPS PAR IMAGE",statX+statW+48,90,24,Muted);CenterText(c,V(g.Frametime," ms",1),statX+statW*1.5f+18,185,62,White);
+        Panel(c,40,36,statX-58,244,.38f);Text(c,g.Active?Localizer.T("JEU EN COURS"):Localizer.T("JEUX / EN ATTENTE"),74,84,26,cyan);Text(c,g.Name,74,146,49,White,maximum:statX-130);
+        Text(c,g.Active?Localizer.T("SURVEILLANCE DES PERFORMANCES"):Localizer.T("Lance un jeu pour suivre ses performances"),74,217,25,cyan,maximum:statX-130);
+        Panel(c,statX,36,statW,244,.65f);Text(c,Localizer.T("IMAGES PAR SECONDE"),statX+30,90,24,Muted);CenterText(c,V(g.Fps,""),statX+statW/2,185,108,cyan);
+        Panel(c,statX+statW+18,36,statW,244,.65f);Text(c,Localizer.T("TEMPS PAR IMAGE"),statX+statW+48,90,24,Muted);CenterText(c,V(g.Frametime," ms",1),statX+statW*1.5f+18,185,62,White);
         Text(c,g.FpsStatus,statX+24,268,16,Muted,maximum:statW*2);
-        float cell=(canvasWidth-80)/4;Panel(c,40,304,canvasWidth-80,121,.72f);MiniMetric(c,74,"CHARGE GPU",V(d.Pc.Gpu,"%"),d.Pc.Gpu/100,Pink);MiniMetric(c,74+cell,"MÉMOIRE VIDÉO",V(d.Pc.Vram," Go",1),null,Purple);MiniMetric(c,74+cell*2,"PROCESSEUR",V(d.Pc.Cpu,"%"),d.Pc.Cpu/100,cyan);Text(c,"TAILLE DE FENÊTRE",74+cell*3,342,20,Muted);Text(c,g.Resolution,74+cell*3,388,31,White);
+        float cell=(canvasWidth-80)/4;Panel(c,40,304,canvasWidth-80,121,.72f);MiniMetric(c,74,Localizer.T("CHARGE GPU"),V(d.Pc.Gpu,"%"),d.Pc.Gpu/100,Pink);MiniMetric(c,74+cell,Localizer.T("MÉMOIRE VIDÉO"),V(d.Pc.Vram,Localizer.T(" Go"),1),null,Purple);MiniMetric(c,74+cell*2,Localizer.T("PROCESSEUR"),V(d.Pc.Cpu,"%"),d.Pc.Cpu/100,cyan);Text(c,Localizer.T("TAILLE DE FENÊTRE"),74+cell*3,342,20,Muted);Text(c,g.Resolution,74+cell*3,388,31,White);
     }
     private void AmbientPage(SKCanvas c,Snapshot d,DateTime now,double t)
     {
-        Panel(c,49,48,490,370,.38f);Text(c,now.ToString("HH:mm"),91,244,141,White);Text(c,now.ToString("ddd, dd MMM yyyy",CultureInfo.GetCultureInfo("fr-FR")).ToUpperInvariant(),94,302,29,White);
+        Panel(c,49,48,490,370,.38f);Text(c,now.ToString("HH:mm"),91,244,141,White);Text(c,now.ToString("ddd, dd MMM yyyy",Localizer.Culture).ToUpperInvariant(),94,302,29,White);
 
-        float right=canvasWidth-432;Panel(c,right,75,386,327,.35f);WeatherIcon(c,right+69,197,d.Weather.Code,d.Weather.IsDay,42);Text(c,V(d.Weather.Temperature,"°C"),right+132,211,58,White);Text(c,d.Weather.Temperature==null?"Météo indisponible":Condition(d.Weather.Code),right+32,271,26,White,maximum:320);Text(c,d.Weather.Location,right+32,314,21,Muted,maximum:320);Text(c,d.Weather.Status,right+32,351,17,Muted,maximum:320);
+        float right=canvasWidth-432;Panel(c,right,75,386,327,.35f);WeatherIcon(c,right+69,197,d.Weather.Code,d.Weather.IsDay,42);Text(c,V(d.Weather.Temperature,"°C"),right+132,211,58,White);Text(c,d.Weather.Temperature==null?Localizer.T("Météo indisponible"):Condition(d.Weather.Code),right+32,271,26,White,maximum:320);Text(c,d.Weather.Location,right+32,314,21,Muted,maximum:320);Text(c,d.Weather.Status,right+32,351,17,Muted,maximum:320);
         using var p=new SKPaint{Color=new SKColor(255,159,60,(byte)(10+5*Math.Sin(t*.3))),IsAntialias=true};c.DrawOval(1130,370,430,50,p);
     }
     private void MiniMetric(SKCanvas c,float x,string label,string value,double? v,SKColor color){Text(c,label,x,342,20,Muted);Text(c,value,x,389,38,White);Bar(c,x,404,210,v,color);}
     private void LabRow(SKCanvas c,float x,float y,string label,string value,float width){Text(c,label,x,y,21,Muted);Text(c,value,x+width*.47f,y,25,White,maximum:width*.53f);}
     private void Mini(SKCanvas c,float x,float y,float w,string name,string value,SKColor color){Panel(c,x,y,w,83,.88f,color);Circle(c,x+27,y+42,11,color,true,2);Text(c,name,x+50,y+29,17,Muted);Text(c,value,x+50,y+62,24,White,maximum:w-60);}
     private static string FanName(PcData p,FanRole r)=>(p.Fans?.FirstOrDefault(f=>f.Role==r)?.Label??CoolingLabels.Label(r)).ToUpperInvariant();
-    private void CoolingTile(SKCanvas c,float x,float y,float width,string label,double? rpm,SKColor color){Panel(c,x,y,width,61,.88f,color);Circle(c,x+19,y+31,7,color,true,2);Text(c,label,x+35,y+20,15,Muted,maximum:width-46);Text(c,V(rpm," tr/min"),x+35,y+48,24,White,maximum:width-46);}
+    private void CoolingTile(SKCanvas c,float x,float y,float width,string label,double? rpm,SKColor color){Panel(c,x,y,width,61,.88f,color);Circle(c,x+19,y+31,7,color,true,2);Text(c,label,x+35,y+20,15,Muted,maximum:width-46);Text(c,V(rpm,Localizer.T(" tr/min")),x+35,y+48,24,White,maximum:width-46);}
     private void Gauge(SKCanvas c,float x,float y,float r,string label,double? value,string sub,SKColor color)
     {
         Circle(c,x,y,r+10,new(0,10,25,170));Circle(c,x,y,r,new(17,50,76),true,8);Circle(c,x,y,r-14,new(44,93,115,100),true,1);
@@ -146,7 +147,7 @@ public sealed class NeonRenderer : IDisposable
         var max=Math.Max(1,values.Where(v=>v.HasValue).Select(v=>v!.Value).DefaultIfEmpty(1).Max());using var path=new SKPath();bool started=false;
         for(int i=0;i<values.Length;i++){if(values[i]==null){started=false;continue;}float xx=x+w*i/Math.Max(1,values.Length-1),yy=y+h-(float)(values[i]!.Value/max)*h*.88f;if(!started){path.MoveTo(xx,yy);started=true;}else path.LineTo(xx,yy);}
         using var p=new SKPaint{IsAntialias=true,Color=color,Style=SKPaintStyle.Stroke,StrokeWidth=2.5f};c.DrawPath(path,p);
-        if(values.All(v=>v==null))Text(c,"Données indisponibles",x+12,y+h/2,21,Muted);
+        if(values.All(v=>v==null))Text(c,Localizer.T("Données indisponibles"),x+12,y+h/2,21,Muted);
     }
     private void Rain(SKCanvas c,double t){for(int i=0;i<75;i++){float x=(i*137.91f)%1920,y=(float)((i*89+t*(100+i%7*20))%480);Line(c,x,y,x-4,y+20,new SKColor(95,195,239,60),1);}}
     private void WeatherIcon(SKCanvas c,float x,float y,int code,bool day,float size)
@@ -187,7 +188,7 @@ public sealed class NeonRenderer : IDisposable
     private static void DrawCover(SKCanvas c,SKBitmap b,SKRect rect,SKPaint? paint=null){float scale=Math.Max(rect.Width/b.Width,rect.Height/b.Height);float sw=rect.Width/scale,sh=rect.Height/scale;var source=new SKRect((b.Width-sw)/2,(b.Height-sh)/2,(b.Width+sw)/2,(b.Height+sh)/2);c.DrawBitmap(b,source,rect,paint);}
     public static string V(double? value,string unit,int decimals=0)=>value is {} n&&double.IsFinite(n)?n.ToString("F"+decimals,CultureInfo.InvariantCulture)+unit:"—";
     private static string Time(double sec)=>TimeSpan.FromSeconds(Math.Max(0,sec)).ToString(@"m\:ss");
-    private static string Condition(int code)=>code switch{0=>"Ciel dégagé",1 or 2=>"Éclaircies",3=>"Nuageux",45 or 48=>"Brouillard",>=51 and <=57=>"Bruine",>=61 and <=67=>"Pluie",>=71 and <=77=>"Neige",>=80 and <=82=>"Averses",>=95=>"Orage",_=>"Nuageux"};
+    private static string Condition(int code)=>code switch{0=>Localizer.T("Ciel dégagé"),1 or 2=>Localizer.T("Éclaircies"),3=>Localizer.T("Nuageux"),45 or 48=>Localizer.T("Brouillard"),>=51 and <=57=>Localizer.T("Bruine"),>=61 and <=67=>Localizer.T("Pluie"),>=71 and <=77=>Localizer.T("Neige"),>=80 and <=82=>Localizer.T("Averses"),>=95=>Localizer.T("Orage"),_=>Localizer.T("Nuageux")};
     public void Dispose(){foreach(var b in images.Values)b.Dispose();cover?.Dispose();type.Dispose();mono.Dispose();symbols.Dispose();}
 }
 

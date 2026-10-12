@@ -1,17 +1,19 @@
-# Contribuer
+# Contributing
 
-Installer le SDK .NET 10 et cloner le dépôt sur Windows x64. Les redistribuables officiels et leurs licences dans tools sont conservés sans modification ; leurs empreintes sont vérifiées lors du build.
+Install the .NET 10 SDK and clone the repository on Windows x64. Official redistributables and their licenses in tools are kept unmodified; their hashes are checked during the build.
 
 ```powershell
 ./scripts/build.ps1
-# Avec Inno Setup 6 pour produire également le Setup :
+# With Inno Setup 6, also build the installer:
 ./scripts/build.ps1 -Installer
 ```
 
-Lire AGENTS.md et docs/ARCHITECTURE.md. Le monitoring des ventilateurs est strictement en lecture seule. Toute nouvelle famille d’écran doit avoir un transport identifié, une géométrie confirmée et des essais physiques documentés. Ne pas considérer une simple correspondance de marque comme une compatibilité.
+Read [AGENTS.md](AGENTS.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Fan monitoring is strictly read-only. Every new display family needs an identified transport, confirmed geometry and documented physical tests. Brand matching alone does not establish compatibility.
 
-Tester d’abord avec `--preview` : aucun transfert USB, aucune capture PresentMon. Tester ensuite le package autonome sur les appareils concernés. Ne jamais lancer plusieurs écrivains USB en même temps.
+Test first with `--preview`: no USB transfers or PresentMon capture. Then test the standalone package on the relevant devices. Never run multiple USB writers at once. `--review-ui --english` captures the interface and exercises language changes in preview mode; `--export --english` exports simulated and missing-data display layouts.
 
-Pour un rapport de problème, préciser Windows, version de LOU, modèle des appareils et comportement attendu. Retirer noms de comptes, numéros de série, chemins privés et configurations personnelles des journaux avant de les partager.
+For issue reports, include Windows version, LOU version, device models and expected behavior. Remove account names, serial numbers, private paths and personal configurations from logs before sharing them.
 
-Les packages compilés vont dans les Releases, pas dans l’historique Git. Fournir les sources correspondant exactement aux binaires et conserver les notices de licence. Le workflow fourni compile et archive les packages ; leur publication reste manuelle.
+Compiled packages belong in Releases, not Git history. Provide sources matching the binaries exactly and retain all license notices. The workflow builds and archives packages; release publication is manual.
+
+Translations are embedded in `src/Lou.Core/Localization`. French source strings are stable presentation keys. Add English entries and keep format placeholders intact. Never translate sensor IDs, connector names, user labels, media metadata or executable identities. Test both languages, empty data and compact layouts.

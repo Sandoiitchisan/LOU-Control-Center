@@ -1,3 +1,4 @@
+using Lou.Core;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Management;
@@ -45,12 +46,12 @@ public sealed class WinUsbTransport : IBulkTransport
     private WinUsbTransport(){}
     public static WinUsbTransport Open(UsbDevice device)
     {
-        if(!device.Service.Equals("WINUSB",StringComparison.OrdinalIgnoreCase))throw new InvalidOperationException("Pilote WinUSB absent. Aucun pilote n'a été modifié.");
+        if(!device.Service.Equals("WINUSB",StringComparison.OrdinalIgnoreCase))throw new InvalidOperationException(Localizer.T("Pilote WinUSB absent. Aucun pilote n'a été modifié."));
         Exception? last=null;
         foreach(var path in device.Paths){var t=new WinUsbTransport();try{t.file=CreateFile(path,0xC0000000,3,IntPtr.Zero,3,0x40000000,IntPtr.Zero);if(t.file.IsInvalid)throw new Win32Exception();if(!WinUsb_Initialize(t.file,out t.usb))throw new Win32Exception();if(!WinUsb_QueryInterfaceSettings(t.usb,0,out var descriptor))throw new Win32Exception();var pipes=new List<UsbEndpoint>();for(byte i=0;i<descriptor.Endpoints;i++){if(!WinUsb_QueryPipe(t.usb,0,i,out var p))throw new Win32Exception();pipes.Add(new(p.Id,p.Type,p.MaxPacket));uint timeout=1500;if(!WinUsb_SetPipePolicy(t.usb,p.Id,3,4,ref timeout))throw new Win32Exception();}t.Endpoints=pipes.ToArray();t.Path=path;return t;}catch(Exception ex){last=ex;t.Dispose();}}
-        throw new IOException("Accès WinUSB impossible (TRCC actif, appareil déconnecté ou chemin non accessible).",last);
+        throw new IOException(Localizer.T("Accès WinUSB impossible (TRCC actif, appareil déconnecté ou chemin non accessible)."),last);
     }
-    public void Write(byte endpoint,byte[] bytes){if(!WinUsb_WritePipe(usb,endpoint,bytes,(uint)bytes.Length,out var count,IntPtr.Zero))throw new Win32Exception();if(count!=bytes.Length)throw new IOException("Transfert USB incomplet.");}
+    public void Write(byte endpoint,byte[] bytes){if(!WinUsb_WritePipe(usb,endpoint,bytes,(uint)bytes.Length,out var count,IntPtr.Zero))throw new Win32Exception();if(count!=bytes.Length)throw new IOException(Localizer.T("Transfert USB incomplet."));}
     public byte[] Read(byte endpoint,int length){var data=new byte[length];if(!WinUsb_ReadPipe(usb,endpoint,data,(uint)length,out var count,IntPtr.Zero))throw new Win32Exception();return data.AsSpan(0,(int)count).ToArray();}
     public void Dispose(){if(usb!=IntPtr.Zero){WinUsb_Free(usb);usb=IntPtr.Zero;}file?.Dispose();file=null;}
     [StructLayout(LayoutKind.Sequential,Pack=1)] private struct Descriptor {public byte Length,Type,Number,Alternate,Endpoints,Class,SubClass,Protocol,Index;}
@@ -84,19 +85,19 @@ public sealed class LcdSession : IDisposable
     }
     public static LcdSession Connect(UsbDevice device)
     {
-        if(DeviceDiscovery.VendorRunning())throw new InvalidOperationException("Ferme TRCC et ses auxiliaires avant le handshake. Le second LCD conservera sa dernière image, mais ses valeurs ne seront plus actualisées.");
+        if(DeviceDiscovery.VendorRunning())throw new InvalidOperationException(Localizer.T("Ferme TRCC et ses auxiliaires avant le handshake. Le second LCD conservera sa dernière image, mais ses valeurs ne seront plus actualisées."));
         var transport=WinUsbTransport.Open(device);
         try{
             var outs=transport.Endpoints.Where(p=>p.Type==2&&(p.Address&128)==0).ToArray();var ins=transport.Endpoints.Where(p=>p.Type==2&&(p.Address&128)!=0).ToArray();
-            if(outs.Length!=1||ins.Length!=1)throw new NotSupportedException("Endpoints bulk ambigus : aucun handshake envoyé.");
-            if(device.IsLy&&outs[0].Address is not (0x09 or 0x01))throw new NotSupportedException("Endpoint LY non documenté.");
-            if(!device.IsLy&&outs[0].Address!=0x01)throw new NotSupportedException("Endpoint ChiZhu non documenté.");
+            if(outs.Length!=1||ins.Length!=1)throw new NotSupportedException(Localizer.T("Endpoints bulk ambigus : aucun handshake envoyé."));
+            if(device.IsLy&&outs[0].Address is not (0x09 or 0x01))throw new NotSupportedException(Localizer.T("Endpoint LY non documenté."));
+            if(!device.IsLy&&outs[0].Address!=0x01)throw new NotSupportedException(Localizer.T("Endpoint ChiZhu non documenté."));
             return new(transport,device.IsLy?new LyProtocol():new ChiZhuProtocol(),outs[0].Address,ins[0].Address);
         }catch{transport.Dispose();throw;}
     }
     public void Send(byte[] payload)
     {
-        lock(gate){ObjectDisposedException.ThrowIf(disposed,this);var watch=Stopwatch.StartNew();foreach(var chunk in protocol.Frame(payload,Profile.Width,Profile.Height,Profile.Jpeg))transport.Write(output,chunk);LastWriteMs=watch.Elapsed.TotalMilliseconds;if(protocol.NeedsAck&&transport.Read(input,512).Length==0)throw new IOException("ACK LCD absent.");Frames++;LastTransferMs=watch.Elapsed.TotalMilliseconds;LastAckMs=LastTransferMs-LastWriteMs;}
+        lock(gate){ObjectDisposedException.ThrowIf(disposed,this);var watch=Stopwatch.StartNew();foreach(var chunk in protocol.Frame(payload,Profile.Width,Profile.Height,Profile.Jpeg))transport.Write(output,chunk);LastWriteMs=watch.Elapsed.TotalMilliseconds;if(protocol.NeedsAck&&transport.Read(input,512).Length==0)throw new IOException(Localizer.T("ACK LCD absent."));Frames++;LastTransferMs=watch.Elapsed.TotalMilliseconds;LastAckMs=LastTransferMs-LastWriteMs;}
     }
     public void Dispose(){lock(gate){if(disposed)return;disposed=true;transport.Dispose();}}
 }

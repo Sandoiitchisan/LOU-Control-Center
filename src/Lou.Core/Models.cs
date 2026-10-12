@@ -13,7 +13,7 @@ public sealed record FanBinding(FanRole Role,string Provider,string Board,string
 public sealed record FanReading(FanRole Role,string Label,string Connector,double? Rpm,string Status,string SensorId,string ControllerId,string Provider);
 public static class CoolingLabels
 {
-    public static string Label(FanRole role)=>role switch{FanRole.Radiator=>"Radiateur AiO",FanRole.Rear=>"Boîtier 1",FanRole.Bottom=>"Boîtier 2",FanRole.Pump=>"Pompe AiO",_=>"Carte graphique"};
+    public static string Label(FanRole role)=>role switch{FanRole.Radiator=>Localizer.T("Radiateur AiO"),FanRole.Rear=>Localizer.T("Boîtier 1"),FanRole.Bottom=>Localizer.T("Boîtier 2"),FanRole.Pump=>Localizer.T("Pompe AiO"),_=>Localizer.T("Carte graphique")};
 }
 public sealed record Forecast(DateTime Time, double Temperature, int Code, double? Rain=null, double? Low=null);
 public sealed record WeatherData(string Location, string Status, DateTimeOffset? Updated=null, double? Temperature=null,
