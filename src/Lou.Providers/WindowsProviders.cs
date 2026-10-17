@@ -38,7 +38,7 @@ public sealed class PcProvider : IDisposable
                 rx=stat.BytesReceived;tx=stat.BytesSent;sampled=now;adapter=nic.Id;name=nic.Name;
             }
         }catch{}
-        var data=amd.Enrich(new(Cpu:cpu,Gpu:load,RamUsed:ok?(mem.Total-mem.Available)/1073741824d:null,RamTotal:ok?mem.Total/1073741824d:null,Download:down,Upload:up,Adapter:name),bindings?.FirstOrDefault(b=>b.Role==FanRole.Gpu)?.ControllerId??"");
+        var data=amd.Enrich(new(Cpu:cpu,Gpu:load,RamUsed:ok?(mem.Total-mem.Available)/1073741824d:null,RamTotal:ok?mem.Total/1073741824d:null,Download:down,Upload:up,Adapter:name),AmdProvider.PreferredController(bindings));
         var hardware=HardwareSensors.Read();
         data=HardwareSensors.EnrichMapped(data,hardware,DateTimeOffset.UtcNow,bindings??[],amd.FanSensor);
         return configuration==null?data:SensorCatalog.Enrich(data,hardware,configuration,DateTimeOffset.UtcNow);

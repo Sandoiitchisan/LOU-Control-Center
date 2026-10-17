@@ -4,15 +4,18 @@
 
 **Your PC. Your displays. Your information.**
 
-A Windows application that transforms your Thermalright PC case and AIO displays into customizable dashboards.
+A Windows application that transforms your Thermalright PC case and AIO displays into customizable dashboards, with optional RGB lighting control in 2.2 RC1.
 
 ![Windows 10 and 11 x64](https://img.shields.io/badge/Windows-10%20%7C%2011%20x64-0078D4?style=flat-square)
-![Version 2.1.1](https://img.shields.io/badge/version-2.1.1-68E4CF?style=flat-square)
-[![GPL-3.0 License](https://img.shields.io/badge/license-GPL--3.0-9B5CFF?style=flat-square)](LICENSE)
+![Stable 2.1.1](https://img.shields.io/badge/stable-2.1.1-68E4CF?style=flat-square)
+[![Preview 2.2 RC1](https://img.shields.io/badge/preview-2.2_RC1-FFB454?style=flat-square)](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2rc1)
+[![PolyForm Strict License](https://img.shields.io/badge/license-PolyForm_Strict-9B5CFF?style=flat-square)](LICENSING.md)
 
 [![Download for Windows — Standalone x64 Installer](docs/images/telecharger.svg)](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.1/LOU-Control-Center-Setup-2.1.1-win-x64.exe)
 
 [Portable version](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.1.1/LOU-Control-Center-Portable-2.1.1-win-x64.zip) · [Release notes](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.1.1) · [Installation guide](docs/INSTALLATION.md)
+
+**Try 2.2 RC1:** [Portable ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2rc1/LOU-Control-Center-2.2rc1-20261017-win-x64.zip) · [Browse RC1 source](https://github.com/Sandoiitchisan/LOU-Control-Center/tree/v2.2rc1) · [RC1 release notes](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2rc1)
 
 </div>
 
@@ -27,6 +30,24 @@ CPU temperature, currently playing music, weather forecasts, or gaming performan
 Use an AIO display, a larger case display, or both simultaneously. Choose which pages to show and how often they rotate. Each display maintains its own independent settings, all managed through a unified interface.
 
 > **Languages:** French and English are included in the same app. Choose **Settings → Language → English / Français**, then **Save and apply**. The interface and your displays switch together.
+
+## Display diagnostics
+
+**Screen not recognized?** [Download LOU Diagnostics](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/diagnostics-v1.0.0/LOU-Diagnostics.exe), a separate portable Windows tool that generates an anonymized local text report for display compatibility issues. It performs no RGB scan, needs no LOU installation, and uploads nothing. Its GitHub button opens a new issue where you can attach the report yourself. [Instructions and source](docs/DIAGNOSTICS.md).
+
+## New in 2.2 RC1 — RGB and more display formats
+
+- A bilingual **RGB** section for devices, zones, colors, supported hardware effects, brightness and speed.
+- **17 built-in lighting choices:** static/off, breathing, rainbow, color cycle, wave, comet, pulse, sparkle, rainbow wave, chase, scanner, blink, alternating, fire, aurora and ripple, on compatible direct-color controllers.
+- OpenRGB 1.0 included, with a localhost-only engine and optional administrator access for supported RAM and motherboards.
+- Per-device scene profiles, persistent ARGB LED counts and opt-in application at startup. Unknown or ambiguous device identities block writes.
+- The existing display rendering and read-only cooling monitoring remain independent.
+- Native HID type-2 support for the Trofeo 6.86-inch family, LY1 and ALi/WinUSB paths, documented RGB565 formats and layouts for 1280 × 480, 1600 × 720 and related rectangular displays.
+- Improved AMD fallback temperature handling and physical GPU identity matching. RX 9060 XT behavior still needs hardware confirmation.
+
+**RC1 is a portable Windows x64 prerelease.** Extract the entire ZIP and close TRCC and other LOU instances before launching it. No RC1 installer is published. Stable **2.1.1** remains available above; the in-app stable update check does not offer prereleases.
+
+**242 automated tests passed**, and the standalone executable generated **220 preview images** across eleven geometries in French and English. The new Trofeo path still needs physical confirmation. SCSI and HID type-3 devices are identified but cannot receive images yet. GPU RGB is not validated on the reference GPU. See [RGB support and limits](docs/RGB.md), the [display compatibility matrix](docs/USB_COMPATIBILITY.md), and [RC1 source/build details](docs/RELEASE-2.2rc1.md).
 
 ## What’s new in 2.1.1
 
@@ -111,17 +132,19 @@ Both displays have been successfully tested **running simultaneously**, with ind
 
 **These are currently the only two officially validated devices.** Other Thermalright displays using compatible USB controllers and recognized JPEG protocols may also work, but compatibility is not guaranteed until verified on actual hardware.
 
-### Technical compatibility
+### Technical compatibility — stable 2.1.1 and RC1
 
 | Component | Current support |
 |---|---|
-| Thermalright USB controllers | **LY** (`0416:5408`) and **ChiZhu** (`87AD:70DB`) families, with recognized JPEG display profiles. |
+| Stable Thermalright support | **LY** (`0416:5408`) and **ChiZhu** (`87AD:70DB`) families, with recognized JPEG display profiles. |
+| RC1 additions | HID type 2 (`0416:5302`), LY1 (`0416:5409`), ALi (`0416:5406`, WinUSB only), expanded ChiZhu profiles and documented RGB565 formats. New families need physical validation. |
+| Detected but unsupported transports | SCSI (`0402:3922`, `87CD:70DB`), HID type 3 (`0418:5303`, `0418:5304`) and non-WinUSB ALi variants. |
 | Other display variants | Recognized profiles may be detected, but functionality must be verified on each specific model. |
 | Temperatures and RPM | Readings provided by LibreHardwareMonitor, supplemented by AMD ADL. Availability depends on the hardware. |
 | NVIDIA | Supported by the monitoring library, but validation on physical NVIDIA hardware is still pending. |
 | Music players | Applications that expose playback information through Windows media sessions. |
 
-The Thermalright brand alone does not guarantee compatibility with every display model. Unknown formats and RGB565 displays are reported as unsupported. Windows automatically provides the driver for devices that declare WinUSB compatibility; other variants may require their manufacturer's driver.
+The Thermalright brand alone does not guarantee compatibility with every display model. Unknown formats are rejected; RC1 adds specific documented RGB565 formats. Native HID support requires no driver replacement. Windows automatically provides the driver for devices that declare WinUSB compatibility; other variants may require their manufacturer's driver. See the [detailed matrix](docs/USB_COMPATIBILITY.md).
 
 Game detection relies on graphics activity and software heuristics, so some games may require user-defined exceptions. FPS values represent presentation frame rates, without distinguishing rendered frames from generated frames. The reported resolution corresponds to the game window. FSR, DLSS, HDR, and frame generation are not detected.
 
@@ -133,15 +156,15 @@ Own another Thermalright display? Open a [GitHub Issue](https://github.com/Sando
 
 ## Roadmap
 
-The following features are planned in development priority order. **None of them are included in version 2.1.1.**
+RGB control and broader display support are now available for testing in RC1. Upcoming work includes:
 
 ### 1. MP4 video backgrounds
 
 Support for **MP4 videos as animated display backgrounds**, allowing users to customize their screens with video loops instead of static images, while keeping the interface responsive.
 
-### 2. PC RGB lighting control
+### 2. Broader hardware validation
 
-Planned **PC RGB lighting management**, with the goal of bringing display customization and lighting controls together in a unified application.
+Validate additional Thermalright models and RGB controllers from user reports, including GPU lighting. Implement remaining display transports as reliable protocol evidence and hardware validation become available.
 
 > These are planned features, not release commitments. Their scope and implementation may evolve during development.
 
@@ -159,7 +182,7 @@ Testing with another display? Feedback through [GitHub Issues](https://github.co
 
 Yes — this is a **vibe-coded project**. LOU Control Center was built with substantial help from OpenAI Codex, starting with a very practical goal: make the displays in a real PC useful, attractive and easy to manage.
 
-AI helped turn ideas into working software quickly; hands-on testing and user feedback shaped the result. That does not make the code infallible or guarantee support for every PC. The source is open, the tests and known limits are documented, and bug reports, code reviews and contributions are welcome. The aim is simple: be honest about how it was made, and keep making it better.
+AI helped turn ideas into working software quickly; hands-on testing and user feedback shaped the result. That does not make the code infallible or guarantee support for every PC. The source is available to read, the tests and known limits are documented, and bug reports and code reviews are welcome. Changes and redistribution require permission; see the licensing section. The aim is simple: be honest about how it was made, and keep making it better.
 
 ## Development and contributions
 
@@ -173,13 +196,17 @@ The project is built with **C# / .NET 10, WPF, and SkiaSharp**.
 ./scripts/build.ps1 -Installer
 ```
 
-The .NET SDK is required to build from source, but not to run the published packages. The GitHub workflow builds the Windows packages and runs the automated tests.
+The .NET 10 SDK is required to build from source, but not to run published packages. The GitHub workflow builds Windows packages and runs automated tests. The [RC1 tag](https://github.com/Sandoiitchisan/LOU-Control-Center/tree/v2.2rc1) contains the implementation used for the published portable candidate, including the separate RGB and Diagnostics projects. The embedded application version remains `2.2.0`; the public release identifier is `v2.2rc1`. See [build and provenance details](docs/RELEASE-2.2rc1.md).
 
 [Contributing](CONTRIBUTING.md) · [Architecture](docs/ARCHITECTURE.md) · [Security](SECURITY.md)
 
 ## License and credits
 
-LOU Control Center is an independent project distributed under the **[GPL-3.0 license](LICENSE)** and is not affiliated with Thermalright.
+The owner's intended terms for original **2.2 RC1** LOU material are **[PolyForm Strict 1.0.0](LICENSE)**: free for permitted noncommercial use, with commercial use, redistribution and derivative versions subject to prior authorization. This is source-available, not an OSI open-source license. **The protocol provenance/relicensing review remains unresolved**; publication does not establish that all earlier material can be relicensed. The intended restrictions apply only to rights the owner actually holds. See [licensing status](LICENSING.md) and the [review record](docs/LICENSING_REVIEW.md).
+
+**2.1.1 and earlier remain GPL-3.0**, including their existing commercial-use permissions. The change cannot revoke rights already granted. Third-party components retain their own licenses; OpenRGB remains an independent GPL program. [Scope and commercial licensing](LICENSING.md).
+
+LOU is an independent project, not affiliated with Thermalright, OpenRGB or hardware manufacturers.
 
 The project uses several components, including LibreHardwareMonitor, PresentMon, PawnIO, and SkiaSharp. Weather data is provided by [Open-Meteo](https://open-meteo.com/), with city search powered by GeoNames. Public API access without a key is intended for non-commercial use within the service's usage limits. Weather data is attributed under CC BY 4.0.
 

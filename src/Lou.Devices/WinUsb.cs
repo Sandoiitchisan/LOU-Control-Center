@@ -9,9 +9,11 @@ namespace Lou.Devices;
 
 public sealed record UsbDevice(string InstanceId,string Name,string Service,string Status,string[] Paths)
 {
-    public bool IsLy=>InstanceId.Contains("VID_0416&PID_5408",StringComparison.OrdinalIgnoreCase);
+    public DisplayFamily Family=>DisplayFamilies.Identify(InstanceId);
+    public bool IsLy=>Family is DisplayFamily.Ly or DisplayFamily.Ly1;
+    public bool CanStream=>DisplayFamilies.CanStream(Family,Service);
     public string Serial=>InstanceId.Split('\\').Last();
-    public override string ToString()=>$"{(IsLy?"0416:5408 / LY":"87AD:70DB / ChiZhu")} • {Serial} • {Service}";
+    public override string ToString()=>$"{DisplayFamilies.Label(Family)} • {Serial} • {Service}";
 }
 public sealed record UsbEndpoint(byte Address,int Type,ushort PacketSize);
 public static class DeviceDiscovery
@@ -23,13 +25,14 @@ public static class DeviceDiscovery
         foreach(ManagementObject d in collection){using(d){string id=d["PNPDeviceID"]?.ToString()??"";if(!IsSupported(id))continue;result.Add(new(id,d["Name"]?.ToString()??"LCD",d["Service"]?.ToString()??"Inconnu",d["Status"]?.ToString()??"Inconnu",FindPaths(id)));}}
         return result.ToArray();
     }
-    public static bool IsSupported(string id)=>id.StartsWith("USB\\VID_0416&PID_5408\\",StringComparison.OrdinalIgnoreCase)||id.StartsWith("USB\\VID_87AD&PID_70DB\\",StringComparison.OrdinalIgnoreCase);
+    public static bool IsSupported(string id)=>DisplayFamilies.Identify(id)!=DisplayFamily.Unknown;
     private static string[] FindPaths(string id)
     {
-        string needle=id.Replace('\\','#');var paths=new List<string>();using var classes=Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\DeviceClasses");if(classes==null)return [];
-        foreach(var guid in classes.GetSubKeyNames()){using var group=classes.OpenSubKey(guid);if(group==null)continue;foreach(var name in group.GetSubKeyNames()){if(!name.Contains(needle,StringComparison.OrdinalIgnoreCase))continue;paths.Add("\\\\?\\"+name[4..]);}}
+        var paths=new List<string>();using var classes=Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\DeviceClasses");if(classes==null)return [];
+        foreach(var guid in classes.GetSubKeyNames()){using var group=classes.OpenSubKey(guid);if(group==null)continue;foreach(var name in group.GetSubKeyNames()){if(!InterfaceMatches(name,id))continue;paths.Add("\\\\?\\"+name[4..]);}}
         return paths.OrderBy(p=>p.Contains("a5dcbf10",StringComparison.OrdinalIgnoreCase)?1:0).ToArray();
     }
+    public static bool InterfaceMatches(string registryName,string instanceId)=>DisplayFamilies.Identify(instanceId)!=DisplayFamily.Unknown&&registryName.StartsWith("##?#"+instanceId.Replace('\\','#')+"#{",StringComparison.OrdinalIgnoreCase);
     public static bool VendorRunning()=>Process.GetProcesses().Any(p=>{using(p){try{return new[]{"TRCC","USBLCDNEW","USBLCD","TRCCCAP"}.Contains(p.ProcessName,StringComparer.OrdinalIgnoreCase);}catch{return false;}}});
 }
 public interface IBulkTransport : IDisposable
@@ -86,18 +89,22 @@ public sealed class LcdSession : IDisposable
     public static LcdSession Connect(UsbDevice device)
     {
         if(DeviceDiscovery.VendorRunning())throw new InvalidOperationException(Localizer.T("Ferme TRCC et ses auxiliaires avant le handshake. Le second LCD conservera sa dernière image, mais ses valeurs ne seront plus actualisées."));
+        if(!device.CanStream)throw new NotSupportedException(Localizer.T("Écran identifié, mais ce transport n'est pas encore pris en charge. Aucun pilote n'a été modifié."));
+        if(device.Family==DisplayFamily.HidType2)return new(HidTransport.Open(device),new HidLcdProtocol(),0x02,0x83);
         var transport=WinUsbTransport.Open(device);
         try{
             var outs=transport.Endpoints.Where(p=>p.Type==2&&(p.Address&128)==0).ToArray();var ins=transport.Endpoints.Where(p=>p.Type==2&&(p.Address&128)!=0).ToArray();
             if(outs.Length!=1||ins.Length!=1)throw new NotSupportedException(Localizer.T("Endpoints bulk ambigus : aucun handshake envoyé."));
             if(device.IsLy&&outs[0].Address is not (0x09 or 0x01))throw new NotSupportedException(Localizer.T("Endpoint LY non documenté."));
-            if(!device.IsLy&&outs[0].Address!=0x01)throw new NotSupportedException(Localizer.T("Endpoint ChiZhu non documenté."));
-            return new(transport,device.IsLy?new LyProtocol():new ChiZhuProtocol(),outs[0].Address,ins[0].Address);
+            if(device.Family==DisplayFamily.ChiZhu&&outs[0].Address!=0x01)throw new NotSupportedException(Localizer.T("Endpoint ChiZhu non documenté."));
+            if(device.Family==DisplayFamily.Ali&&outs[0].Address!=0x02)throw new NotSupportedException(Localizer.T("Endpoint ALi non documenté."));
+            ILcdProtocol protocol=device.Family switch{DisplayFamily.Ly=>new LyProtocol(),DisplayFamily.Ly1=>new LyProtocol(true),DisplayFamily.ChiZhu=>new ChiZhuProtocol(),DisplayFamily.Ali=>new AliProtocol(),_=>throw new NotSupportedException()};
+            return new(transport,protocol,outs[0].Address,ins[0].Address);
         }catch{transport.Dispose();throw;}
     }
     public void Send(byte[] payload)
     {
-        lock(gate){ObjectDisposedException.ThrowIf(disposed,this);var watch=Stopwatch.StartNew();foreach(var chunk in protocol.Frame(payload,Profile.Width,Profile.Height,Profile.Jpeg))transport.Write(output,chunk);LastWriteMs=watch.Elapsed.TotalMilliseconds;if(protocol.NeedsAck&&transport.Read(input,512).Length==0)throw new IOException(Localizer.T("ACK LCD absent."));Frames++;LastTransferMs=watch.Elapsed.TotalMilliseconds;LastAckMs=LastTransferMs-LastWriteMs;}
+        lock(gate){ObjectDisposedException.ThrowIf(disposed,this);var watch=Stopwatch.StartNew();foreach(var chunk in protocol.Frame(payload,Profile.Width,Profile.Height,Profile.Jpeg)){if(watch.Elapsed.TotalSeconds>8)throw new TimeoutException(Localizer.T("Délai de transfert LCD dépassé."));transport.Write(output,chunk);}LastWriteMs=watch.Elapsed.TotalMilliseconds;if(protocol.NeedsAck&&transport.Read(input,protocol.AckLength).Length==0)throw new IOException(Localizer.T("ACK LCD absent."));Frames++;LastTransferMs=watch.Elapsed.TotalMilliseconds;LastAckMs=LastTransferMs-LastWriteMs;}
     }
     public void Dispose(){lock(gate){if(disposed)return;disposed=true;transport.Dispose();}}
 }

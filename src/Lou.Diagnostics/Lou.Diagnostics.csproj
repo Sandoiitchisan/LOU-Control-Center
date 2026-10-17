@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType><UseWPF>true</UseWPF>
+    <AssemblyName>LOU.Diagnostics</AssemblyName><Version>1.0.0</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>../../assets/icons/lou.ico</ApplicationIcon>
+  </PropertyGroup>
+</Project>

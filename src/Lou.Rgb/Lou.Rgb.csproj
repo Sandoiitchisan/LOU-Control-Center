@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><UseWPF>true</UseWPF><UseWindowsForms>true</UseWindowsForms></PropertyGroup>
+  <ItemGroup><EmbeddedResource Include="../../tools/OpenRGB/SHA256.json" LogicalName="Lou.Rgb.OpenRGB.SHA256.json" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../Lou.Core/Lou.Core.csproj" /></ItemGroup>
+</Project>

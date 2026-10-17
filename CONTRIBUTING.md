@@ -1,5 +1,7 @@
 # Contributing
 
+PolyForm Strict is the owner's intended license for original 2.2 RC1 material, subject to the unresolved provenance review described in [LICENSING.md](LICENSING.md). Bug reports and review feedback are welcome. For material covered by those intended restrictions, request permission before modifying, redistributing or submitting patches, and agree contribution licensing with the maintainer. Existing GPL releases and third-party licenses are unaffected.
+
 Install the .NET 10 SDK and clone the repository on Windows x64. Official redistributables and their licenses in tools are kept unmodified; their hashes are checked during the build.
 
 ```powershell

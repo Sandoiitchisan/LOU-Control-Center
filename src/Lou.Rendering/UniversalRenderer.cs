@@ -3,7 +3,7 @@ using Lou.Core;
 using SkiaSharp;
 namespace Lou.Rendering;
 
-public sealed class UniversalRenderer:IDisposable
+public sealed partial class UniversalRenderer:IDisposable
 {
     private readonly NeonRenderer wide;private readonly AioRenderer cooling=new();
     private readonly string assets;private readonly Dictionary<string,SKBitmap?> images=[];
@@ -23,8 +23,14 @@ public sealed class UniversalRenderer:IDisposable
         path=ConfigStore.ResolveBackground(path);
         if(Image(path) is {} background){float drift=(float)(Math.Sin(elapsed*.12)*s.Animation*7);Cover(c,background,new(-8+drift,-8,s.Width+8+drift,s.Height+8));}
         using(var shade=new SKPaint{Color=new(3,9,20,180)})c.DrawRect(0,0,s.Width,s.Height,shade);
-        float scale=Math.Min(s.Width/480f,s.Height/480f);c.Translate((s.Width-scale*480)/2,(s.Height-scale*480)/2);c.Scale(scale);
         accent=SKColor.TryParse(s.Accent,out var color)?color:new(0,229,255);
+        if(!s.CoolingOnly&&(float)s.Width/s.Height>=1.6f){
+            c.Scale(s.Height/480f);float width=s.Width*480f/s.Height;
+            Landscape(c,page,d,s,now,width);
+            if(s.IsNight(now)){using var dim=new SKPaint{Color=new(0,0,12,65)};c.DrawRect(0,0,width,480,dim);}
+            return result;
+        }
+        float scale=Math.Min(s.Width/480f,s.Height/480f);c.Translate((s.Width-scale*480)/2,(s.Height-scale*480)/2);c.Scale(scale);
         if(s.CoolingOnly){using var bitmap=cooling.Render(d.Pc,AioView.Cooling,false,elapsed);c.DrawBitmap(bitmap,0,0);}
         else{
             using(var edge=new SKPaint{Color=accent.WithAlpha((byte)(45+130*s.Glow)),Style=SKPaintStyle.Stroke,StrokeWidth=1,IsAntialias=true})c.DrawRoundRect(new(12,12,468,468),15,15,edge);
@@ -57,9 +63,13 @@ public sealed class UniversalRenderer:IDisposable
         var days=w.Days??[];for(int i=0;i<Math.Min(3,days.Length);i++){float x=94+i*146;Text(c,days[i].Time.ToString("ddd",Localizer.Culture),x,375,15,Muted,center:true);Text(c,V(days[i].Temperature,"°")+" / "+V(days[i].Low,"°"),x,402,22,White,center:true);}
         Text(c,"Open-Meteo · CC BY 4.0 · "+w.Status,240,432,11,Muted,center:true,max:420);
     }
-    private void Music(SKCanvas c,MediaData m,double t)
+    private void UpdateCover(MediaData m)
     {
         if(!ReferenceEquals(coverBytes,m.Cover)){cover?.Dispose();cover=null;coverBytes=m.Cover;try{if(m.Cover!=null){using var codec=SKCodec.Create(new SKMemoryStream(m.Cover));if(codec!=null&&codec.Info.Width<=4096&&codec.Info.Height<=4096)cover=SKBitmap.Decode(codec);}}catch{}}
+    }
+    private void Music(SKCanvas c,MediaData m,double t)
+    {
+        UpdateCover(m);
         if(cover!=null)Cover(c,cover,new(145,66,335,256));else{
             using var ring=new SKPaint{IsAntialias=true,Color=Pink,Style=SKPaintStyle.Stroke,StrokeWidth=2};for(int i=0;i<4;i++)c.DrawCircle(240,161,47+i*15,ring);
             using var font=new SKFont(symbols,93);using var paint=new SKPaint{Color=White,IsAntialias=true};font.MeasureText("♫",out var bounds);c.DrawText("♫",240-(bounds.Left+bounds.Right)/2,161-(bounds.Top+bounds.Bottom)/2,font,paint);

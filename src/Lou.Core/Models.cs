@@ -7,7 +7,7 @@ public sealed record PcData(double? Cpu=null, double? CpuTemp=null, double? Gpu=
     double? RamUsed=null, double? RamTotal=null, double? Vram=null, double? Download=null, double? Upload=null,
     double? CpuFan=null, double? GpuFan=null, double? Pump=null, string Adapter="", double? CpuMhz=null,
     double? GpuHotspot=null,double? GpuPower=null,string GpuName="GPU 3D / Windows",
-    double? RearFan=null,double? BottomFan=null,string CoolingStatus="En attente",FanReading[]? Fans=null);
+    double? RearFan=null,double? BottomFan=null,string CoolingStatus="En attente",FanReading[]? Fans=null,string GpuDeviceId="");
 public enum FanRole { Radiator, Rear, Bottom, Pump, Gpu }
 public sealed record FanBinding(FanRole Role,string Provider,string Board,string ControllerId,string SensorId,string Connector,string Evidence="Association utilisateur",string Hardware="",string Topology="");
 public sealed record FanReading(FanRole Role,string Label,string Connector,double? Rpm,string Status,string SensorId,string ControllerId,string Provider);

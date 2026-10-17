@@ -1,9 +1,11 @@
 # Dependencies and attributions
 
-LOU Control Center is distributed under GPL-3.0 (see LICENSE), compatible with protocol components informed by the GPL implementations consulted. Research documentation records exact revisions. No TRCC binaries or manufacturer firmware are redistributed.
+PolyForm Strict 1.0.0 is the owner's intended license for original 2.2 RC1 material, limited to rights actually held (see LICENSE and LICENSING.md). The protocol-provenance review remains unresolved; publication does not clear relicensing of preexisting material. Earlier GPL releases keep their original terms. The separately distributed dependencies below retain their own licenses. Research documentation records exact revisions consulted for protocol interoperability; no TRCC binaries or manufacturer firmware are redistributed.
 
 | Component | Version / source | License / use |
 |---|---|---|
+| OpenRGB | 1.0, revision 81bbe18, unmodified Windows x64 | GPL-2.0-or-later; separate executable accessed via standard TCP SDK; license and corresponding OpenRGB source archive included in tools/OpenRGB |
+| Qt | 6.8.3, official OpenRGB DLLs | Replaceable shared libraries used by OpenRGB; upstream licenses and source links in tools/OpenRGB |
 | .NET / WPF | 10.0, self-contained x64 runtime | MIT and Microsoft distribution notices |
 | SkiaSharp and NativeAssets.Win32 | 3.119.1 | MIT; Skia includes BSD and third-party notices |
 | System.Management | 10.0.12 | MIT, .NET Foundation |
@@ -17,7 +19,7 @@ LOU Control Center is distributed under GPL-3.0 (see LICENSE), compatible with p
 | trvision, Osman Demir | Revision in docs/USB.md | MIT; protocol compared, Python code not bundled |
 | thermalright-lcd-control, rejeb | Revision in docs/USB.md | Apache-2.0; transport and tests compared |
 | LibreHardwareMonitor and contributors | 0.9.6, commit 3d331e3370efb858411f19511373eff65a218701 | MPL-2.0; unmodified library, read-only CPU/motherboard/GPU collection |
-| HidSharp | 2.6.4 | Apache-2.0, license included; LibreHardwareMonitor dependency |
+| HidSharp | 2.6.4 | Apache-2.0, license included; native HID display access and LibreHardwareMonitor dependency |
 | DiskInfoToolkit / RAMSPDToolkit-NDD | 1.1.2 / 1.4.2 | MPL-2.0; unmodified dependencies; storage and SPD monitoring not enabled |
 | Mono.Posix.NETStandard | 1.0.0 | MIT; LibreHardwareMonitor dependency, unused for Windows sensors |
 | PawnIO | 2.2.0, redistributable included | Official unmodified installer signed by namazso.eu, explicit redistribution permission in binary; bundled in Setup, optional for portable. GPL-2.0-or-later driver with exception |

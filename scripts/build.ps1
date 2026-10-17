@@ -7,6 +7,11 @@ Set-Location -LiteralPath $repoRoot
 $version=([xml](Get-Content -LiteralPath 'src/Lou.App/Lou.App.csproj' -Raw)).Project.PropertyGroup.Version
 if($version -notmatch '^\d+\.\d+\.\d+$'){throw 'Invalid package version'}
 if((Get-FileHash -LiteralPath 'tools/PresentMon/PresentMon.exe' -Algorithm SHA256).Hash -ne 'B2A706BC6AD475749E3B7E3409263AA1E6906D45BDCF993F6DBC0F660188F1AF'){throw 'PresentMon hash mismatch'}
+$rgbManifest=Get-Content -LiteralPath 'tools/OpenRGB/SHA256.json' -Raw | ConvertFrom-Json
+foreach($entry in $rgbManifest.PSObject.Properties){
+    $dependency=Join-Path 'tools/OpenRGB' $entry.Name
+    if((Get-FileHash -LiteralPath $dependency -Algorithm SHA256).Hash -ne $entry.Value){throw ('OpenRGB hash mismatch: '+$entry.Name)}
+}
 & $DotNetPath build 'Lou.ControlCenter.slnx' -c Release --nologo
 if($LASTEXITCODE -ne 0){throw 'Build failed'}
 if(-not $SkipTests){& $DotNetPath test 'tests/Lou.Tests/Lou.Tests.csproj' -c Release --no-build --logger 'trx;LogFileName=universal.trx' --results-directory 'artifacts/tests';if($LASTEXITCODE -ne 0){throw 'Tests failed'}}
@@ -14,7 +19,7 @@ if(-not $SkipTests){& $DotNetPath test 'tests/Lou.Tests/Lou.Tests.csproj' -c Rel
 $stage=Join-Path $repoRoot ('artifacts/staging-'+[Guid]::NewGuid().ToString('N'))
 & $DotNetPath publish 'src/Lou.App/Lou.App.csproj' -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:DebugType=None -o $stage
 if($LASTEXITCODE -ne 0){throw 'Publish failed'}
-foreach($file in @('README.md','LICENSE','THIRD_PARTY_NOTICES.md')){Copy-Item -LiteralPath $file -Destination $stage}
+foreach($file in @('README.md','LICENSE','LICENSING.md','THIRD_PARTY_NOTICES.md')){Copy-Item -LiteralPath $file -Destination $stage}
 Copy-Item -LiteralPath 'docs','licenses' -Destination $stage -Recurse
 New-Item -ItemType Directory -Force -Path (Join-Path $stage 'tools/PawnIO') | Out-Null
 if((Get-FileHash -LiteralPath 'tools/PawnIO/PawnIO_setup.exe' -Algorithm SHA256).Hash -ne '1F519A22E47187F70A1379A48CA604981C4FCF694F4E65B734AAA74A9FBA3032'){throw 'PawnIO hash mismatch'}

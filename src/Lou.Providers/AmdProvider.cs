@@ -8,7 +8,7 @@ public sealed class AmdProvider : IDisposable
     private IntPtr context;
     private int adapter=-1;
     private string name="";
-    private string controller="",preferred="";
+    private string controller="",preferred="",deviceId="";
     public HardwareReading? FanSensor {get;private set;}
     public object[] AdapterInventory {get;private set;}=[];
     private bool attempted;
@@ -22,9 +22,12 @@ public sealed class AmdProvider : IDisposable
             var log=new LogData{Size=Marshal.SizeOf<LogData>(),Sensors=new Sensor[256]};bool ok=ADL2_New_QueryPMLogData_Get(context,adapter,ref log)==0;
             double? Value(int id,double max=double.MaxValue)=>ok&&log.Sensors[id].Supported!=0&&log.Sensors[id].Value>=0&&log.Sensors[id].Value<=max?log.Sensors[id].Value:null;
             double? temp=Value(8,150)??Value(28,150),hotspot=Value(27,150),load=Value(19,100),fan=Value(14,15000),power=Value(73,1000)??Value(23,1000);
-            double? memory=ADL2_Adapter_DedicatedVRAMUsage_Get(context,adapter,out int mb)==0&&mb>=0?mb/1024d:null;
-            FanSensor=new(controller+"/pmlog/fan-rpm",name,"GpuAmd","GPU Fan RPM","Fan",fan,controller,controller,name,"AMD ADL");
-            return pc with{Gpu=load??pc.Gpu,GpuTemp=temp,GpuHotspot=hotspot,GpuFan=fan,GpuPower=power,Vram=memory,GpuName=name};
+            // Optional VRAM APIs vary by driver. Their failure must not discard valid PMLog readings.
+            double? memory=null;
+            try{if(ADL2_Adapter_DedicatedVRAMUsage_Get(context,adapter,out int mb)==0&&mb>=0)memory=mb/1024d;}
+            catch(EntryPointNotFoundException){}catch(SEHException){}
+            FanSensor=new(controller+"/pmlog/fan-rpm",name,"GpuAmd","GPU Fan RPM","Fan",fan,controller,controller,name,"AMD ADL",deviceId);
+            return pc with{Gpu=load??pc.Gpu,GpuTemp=temp,GpuHotspot=hotspot,GpuFan=fan,GpuPower=power,Vram=memory,GpuName=name,GpuDeviceId=deviceId};
         }catch(DllNotFoundException){return pc;}catch(EntryPointNotFoundException){return pc;}catch(SEHException){return pc;}
     }
     private void Initialize()
@@ -38,11 +41,12 @@ public sealed class AmdProvider : IDisposable
             AdapterInventory=adapters.Select(a=>(object)new{a.Name,a.Udid,a.Pnp,a.Bus,a.Device,a.Function,a.Vendor,ControllerId=Identity(a)}).ToArray();
             var candidates=adapters.Where(a=>preferred!=""?Identity(a)==preferred:a.Name.Contains("Radeon RX",StringComparison.OrdinalIgnoreCase)).GroupBy(Identity).Select(g=>g.OrderBy(a=>a.Pnp.Length).First()).ToArray();
             if(candidates.Length!=1||string.IsNullOrWhiteSpace(candidates[0].Udid)&&string.IsNullOrWhiteSpace(candidates[0].Pnp))return;
-            var chosen=candidates[0];adapter=chosen.Index;name=chosen.Name.Trim();controller=Identity(chosen);
+            var chosen=candidates[0];adapter=chosen.Index;name=chosen.Name.Trim();controller=Identity(chosen);deviceId=chosen.Pnp.Trim();
         }finally{Marshal.FreeHGlobal(buffer);}
     }
     // ADL exposes several outputs for one physical PCI function. Bind the PCI device, not its output index.
     public static string PhysicalControllerIdentity(string pnp,int bus,int device,int function)=>"/amd-adl/"+pnp.Trim().ToUpperInvariant().Split('\\').ElementAtOrDefault(1)+$"/pci/{bus}:{device}:{function}";
+    public static string PreferredController(IEnumerable<FanBinding>? bindings)=>bindings?.FirstOrDefault(b=>b.Role==FanRole.Gpu&&b.Provider=="AMD ADL")?.ControllerId??"";
     private static string Identity(Adapter a)=>PhysicalControllerIdentity(a.Pnp,a.Bus,a.Device,a.Function);
     public void Dispose(){if(context!=IntPtr.Zero){ADL2_Main_Control_Destroy(context);context=IntPtr.Zero;}}
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]private delegate IntPtr Allocate(int size);

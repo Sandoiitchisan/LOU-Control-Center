@@ -26,6 +26,7 @@ public partial class MainWindow
     private void RefreshLanguage()
     {
         SetLanguage(running.Language);
+        rgb?.SetLanguage(running.Language==AppLanguage.English);
         filling = true;
         Language = System.Windows.Markup.XmlLanguage.GetLanguage(Localizer.Culture.IetfLanguageTag);
         LanguageChoice.ItemsSource = new[] { new Choice<AppLanguage>(AppLanguage.French, "Français"), new(AppLanguage.English, "English") };

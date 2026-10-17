@@ -27,6 +27,7 @@ namespace Lou.App;
 public partial class MainWindow:Window
 {
     private Settings editing,running;
+    private Lou.Rgb.RgbPanel? rgb;
     private readonly bool previewOnly;
     private readonly DataHub hub;
     private readonly CityProvider cities=new();
@@ -67,8 +68,10 @@ public partial class MainWindow:Window
             var grid=new Grid();grid.ColumnDefinitions.Add(new(){Width=new GridLength(2,GridUnitType.Star)});grid.ColumnDefinitions.Add(new(){Width=new GridLength(14)});grid.ColumnDefinitions.Add(new(){Width=new GridLength(1,GridUnitType.Star)});
             var label=new TextBox{MaxLength=40,ToolTip=Localizer.T("Nom affiché sur les écrans")};var connector=new TextBox{MaxLength=40,ToolTip=Localizer.T("Connecteur de la carte mère (facultatif)")};Grid.SetColumn(connector,2);grid.Children.Add(label);grid.Children.Add(connector);box.Children.Add(grid);var combo=new ComboBox{ToolTip=Localizer.T("Capteur matériel à associer")};box.Children.Add(combo);var live=new TextBlock{Foreground=new SolidColorBrush(Color.FromRgb(135,148,159)),FontSize=12};box.Children.Add(live);FanEditors.Children.Add(box);fanControls[role]=(label,connector,combo,live);
         }
+        rgb=new Lou.Rgb.RgbPanel(Path.Combine(ConfigStore.Root,"rgb.json"),previewOnly,s.Language==AppLanguage.English);
+        Tabs.Items.Add(new TabItem{Header="RGB",Content=rgb,Style=(Style)FindResource("NavigationItem")});
         RefreshLanguage();
-        timer.Tick+=(_,_)=>Tick();timer.Start();Loaded+=async(_,_)=>{await ScanAsync();if(running.HardwareMonitoring&&!previewOnly)StartSensors(this,new());if(!previewOnly&&running.CheckUpdatesOnStartup)await CheckUpdates(true);};
+        timer.Tick+=(_,_)=>Tick();timer.Start();Loaded+=async(_,_)=>{await ScanAsync();if(running.HardwareMonitoring&&!previewOnly)StartSensors(this,new());if(!previewOnly&&running.CheckUpdatesOnStartup)await CheckUpdates(true);await rgb.StartAsync();};
     }
     private void FillGlobal(){filling=true;LanguageChoice.SelectedValue=editing.Language;AutoUpdate.IsChecked=editing.CheckUpdatesOnStartup;Accent.SelectedValue=editing.Accent;Glow.Value=editing.Glow;Motion.Value=editing.Animation;Night.IsChecked=editing.Night;NightStart.Text=editing.NightStart.ToString();NightEnd.Text=editing.NightEnd.ToString();Tray.IsChecked=editing.MinimizeToTray;AutoFps.IsChecked=editing.AutomaticFps;IncludedGames.Text=string.Join(Environment.NewLine,editing.Games);IgnoredGames.Text=string.Join(Environment.NewLine,editing.IgnoredGames);Network.Text=editing.NetworkAdapter;CityQuery.Text=editing.Location;CityStatus.Text=editing.CitySelected?Localizer.T("Ville choisie : ")+editing.Location:Localizer.T("Choisissez votre ville pour activer la météo.");filling=false;}
     private void RefreshDisplayChoices(){filling=true;string? id=selected?.InstanceId,previewId=(PreviewChoice.SelectedItem as DisplaySettings)?.InstanceId;DisplayChoice.ItemsSource=editing.Displays.ToArray();DisplayChoice.SelectedItem=editing.Displays.FirstOrDefault(d=>d.InstanceId==id)??editing.Displays.FirstOrDefault();PreviewChoice.ItemsSource=editing.Displays.ToArray();PreviewChoice.SelectedItem=editing.Displays.FirstOrDefault(d=>d.InstanceId==previewId)??editing.Displays.FirstOrDefault();selected=DisplayChoice.SelectedItem as DisplaySettings;filling=false;FillDisplay();}
@@ -83,7 +86,7 @@ public partial class MainWindow:Window
         if(scanning||disposed)return;scanning=true;
         try{
             var devices=await Task.Run(DeviceDiscovery.Scan);if(disposed)return;bool added=false;
-            foreach(var usb in devices){if(editing.Displays.Any(d=>d.InstanceId==usb.InstanceId))continue;var d=new DisplaySettings{InstanceId=usb.InstanceId,Name=usb.IsLy?Localizer.T("Écran panoramique"):Localizer.T("Écran du watercooling"),PreviewWidth=usb.IsLy?1920:480,PreviewHeight=usb.IsLy?462:480,UsbFps=usb.IsLy?24:10};editing.Displays.Add(d);running.Displays.Add(ConfigStore.Clone(d));added=true;}
+            foreach(var usb in devices){if(editing.Displays.Any(d=>d.InstanceId.Equals(usb.InstanceId,StringComparison.OrdinalIgnoreCase)))continue;var d=new DisplaySettings{InstanceId=usb.InstanceId,Name=DisplayFamilies.Label(usb.Family)+(usb.CanStream?"":" · "+Localizer.T("Transport non pris en charge")),Enabled=usb.CanStream,PreviewWidth=usb.IsLy?1920:480,PreviewHeight=usb.IsLy?462:480,UsbFps=usb.IsLy?24:10};editing.Displays.Add(d);running.Displays.Add(ConfigStore.Clone(d));added=true;}
             if(previewOnly&&editing.Displays.Count==0){editing.Displays.Add(new(){InstanceId="preview-wide",Name=Localizer.T("Aperçu panoramique")});editing.Displays.Add(new(){InstanceId="preview-square",Name=Localizer.T("Aperçu carré"),PreviewWidth=480,PreviewHeight=480,UsbFps=10});running.Displays=ConfigStore.Clone(editing.Displays);added=true;}
             foreach(var d in running.Displays)EnsureHost(d);
             if(added){RefreshDisplayChoices();if(!previewOnly)ConfigStore.Save(running);}
@@ -154,7 +157,7 @@ public partial class MainWindow:Window
     private void ScrollPages(object sender,MouseWheelEventArgs e){e.Handled=true;var parent=System.Windows.Media.VisualTreeHelper.GetParent(Pages);while(parent!=null&&parent is not ScrollViewer)parent=System.Windows.Media.VisualTreeHelper.GetParent(parent);if(parent is ScrollViewer scroll)scroll.ScrollToVerticalOffset(scroll.VerticalOffset-e.Delta);}
     private void PowerChanged(object sender,PowerModeChangedEventArgs e)=>Dispatcher.BeginInvoke(()=>{foreach(var h in hosts.Values)if(e.Mode==PowerModes.Suspend)h.Suspend();else if(e.Mode==PowerModes.Resume)h.Resume();});
     private async void Quit(object sender,RoutedEventArgs e){if(closing)return;closing=true;await ShutdownHost();Close();System.Windows.Application.Current.Shutdown();}
-    public async Task ShutdownHost(){if(disposed)return;disposed=true;updateStop.Cancel();updates.Dispose();timer.Stop();SystemEvents.PowerModeChanged-=PowerChanged;searchStop.Cancel();tray.Visible=false;tray.Dispose();foreach(var h in hosts.Values)await h.DisposeAsync();await hub.DisposeAsync();cities.Dispose();searchStop.Dispose();}
+    public async Task ShutdownHost(){if(disposed)return;disposed=true;rgb?.Dispose();updateStop.Cancel();updates.Dispose();timer.Stop();SystemEvents.PowerModeChanged-=PowerChanged;searchStop.Cancel();tray.Visible=false;tray.Dispose();foreach(var h in hosts.Values)await h.DisposeAsync();await hub.DisposeAsync();cities.Dispose();searchStop.Dispose();}
     private void Capture(string path){UpdateLayout();var image=new RenderTargetBitmap((int)ActualWidth,(int)ActualHeight,96,96,PixelFormats.Pbgra32);image.Render(this);var png=new PngBitmapEncoder();png.Frames.Add(BitmapFrame.Create(image));using var file=File.Create(path);png.Save(file);}
     public async Task CaptureReview(){
         string folder=Path.Combine(ConfigStore.IsInstalled?ConfigStore.Root:AppContext.BaseDirectory,"Review");Directory.CreateDirectory(folder);

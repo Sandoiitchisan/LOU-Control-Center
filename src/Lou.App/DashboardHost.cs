@@ -120,9 +120,8 @@ public sealed class DashboardHost : IAsyncDisposable
                 if(DeviceDiscovery.VendorRunning()){Status=Localizer.T("Fermez TRCC pour libérer cet écran");return;}
                 var target=DeviceDiscovery.Scan().SingleOrDefault(d=>d.InstanceId.Equals(display.InstanceId,StringComparison.OrdinalIgnoreCase));if(target==null){Status=Localizer.T("Écran débranché · reconnexion automatique");return;}
                 var connected=LcdSession.Connect(target);var p=connected.Profile;
-                if(!p.Jpeg){connected.Dispose();throw new NotSupportedException(Localizer.T("Format RGB565 non pris en charge dans cette version."));}
                 if(approved!=null&&!DeviceValidation.Matches(approved,target.InstanceId,p)){connected.Dispose();reconnectWanted=false;throw new InvalidDataException(Localizer.T("Profil modifié : retirez cet écran des réglages puis relancez sa détection."));}
-                device=connected;selected=target;approved=new(target.InstanceId,p.Width,p.Height,p.Pm,p.Sub,p.Rotation);display.Profile=approved;
+                device=connected;selected=target;approved=new(target.InstanceId,p.Width,p.Height,p.Pm,p.Sub,p.Rotation,p.Jpeg,p.BigEndian);display.Profile=approved;
                 // First discovery uses the device's native rotation, then user orientation persists.
                 if(!displayWasProfiled){display.Rotation=p.Rotation;displayWasProfiled=true;}
                 var next=ConfigStore.Clone(Settings);next.Width=display.Rotation is 90 or 270?p.Height:p.Width;next.Height=display.Rotation is 90 or 270?p.Width:p.Height;Volatile.Write(ref settings,next);
@@ -132,14 +131,7 @@ public sealed class DashboardHost : IAsyncDisposable
     }
     private bool displayWasProfiled;
     public static byte[] Encode(SKBitmap frame,PanelProfile p,int initialQuality=90)
-    {
-        if(!p.Jpeg)throw new NotSupportedException(Localizer.T("RGB565 non validé : envoi bloqué."));
-        using var native=new SKBitmap(p.Width,p.Height);using var c=new SKCanvas(native);c.Clear(SKColors.Black);
-        if(p.Rotation!=0){c.Translate(p.Width/2f,p.Height/2f);c.RotateDegrees(p.Rotation);c.Translate(-frame.Width/2f,-frame.Height/2f);}
-        if(p.Rotation!=0)c.DrawBitmap(frame,0,0);else c.DrawBitmap(frame,new SKRect(0,0,p.Width,p.Height));
-        for(int quality=initialQuality;quality>=40;quality-=10){using var encoded=native.Encode(SKEncodedImageFormat.Jpeg,quality);if(encoded.Size<450000)return encoded.ToArray();}
-        throw new InvalidDataException(Localizer.T("JPEG trop volumineux : frame abandonnée."));
-    }
+        =>PixelEncoding.Frame(frame,p.Width,p.Height,p.Rotation,p.Jpeg,p.BigEndian,initialQuality);
     public static void Log(string category,string message)
     {
         try{lock(logGate){Directory.CreateDirectory(ConfigStore.Root);string path=System.IO.Path.Combine(ConfigStore.Root,"events.jsonl");if(File.Exists(path)&&new FileInfo(path).Length>2*1024*1024)File.Move(path,path+".1",true);File.AppendAllText(path,JsonSerializer.Serialize(new{time=DateTimeOffset.Now,category,message})+Environment.NewLine);}}catch{}

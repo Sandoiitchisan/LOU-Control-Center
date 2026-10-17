@@ -4,8 +4,8 @@ The project is independent of the personal edition. No server connection, city, 
 
 - Core: JSON configuration, five pages, per-display profiles and independent schedulers.
 - Providers: one shared DataHub collects PC, media, game and weather information. LibreHardwareMonitor 0.9.6 provides AMD/NVIDIA/Intel temperatures and fan readings, supplemented by AMD ADL. Missing readings never become zero.
-- Devices: PnP discovery limited to recognized USB families, LY/ChiZhu handshake and serialized sessions. Persistent profiles are checked at reconnection; changes require a detection reset.
-- Rendering: panoramic and five compact compositions. 90/270-degree orientation changes logical dimensions before physical rotation. An optional cooling view is available.
+- Devices: PnP discovery limited to recognized USB families, native HID type 2 and LY/LY1/ChiZhu/ALi WinUSB handshakes with serialized sessions. Exact physical instance routing prevents cross-device writes. Persistent geometry, codec and byte order are checked at reconnection; changes require a detection reset. SCSI/HID type 3 are identified but disabled. See USB_COMPATIBILITY.md for validation limits.
+- Rendering: panoramic, rectangular landscape and five compact compositions. 90/270-degree orientation changes logical dimensions before physical rotation. JPEG and RGB565 encoding share explicit raster checks. An optional cooling view is available.
 - App: a render/transport thread pair per display, cancellable high-resolution pacing and latest-frame-only buffering. WPF samples previews at 5 Hz without blocking rendering. Requested frame limits are not measured FPS.
 
 ## Reading identity
@@ -43,3 +43,13 @@ Provider status text is translated at the presentation boundary. User labels, me
 ## Release updates
 
 The interface checks the public GitHub latest-release endpoint asynchronously, once per launch automatically if enabled, plus manual requests. A 12-second timeout and 1 MiB response limit bound requests. Only valid newer stable three-part versions trigger an offer. Exact repository URLs and package names are checked; missing assets fall back to the validated release page. Installed apps select Setup, portable apps select ZIP. There is no automatic download, installation, elevation or collector-side check. Preview skips automatic checks; UI validation may explicitly exercise a manual check.
+
+## RGB
+
+`Lou.Rgb` is an edition-independent WPF surface, settings store, bounded SDK 6 client and process host. It has no reference to cooling providers or LCD transports. Each command reconnects, negotiates SDK 6, fetches the current physical inventory and resolves a persistent assignment before routing via the server's unique ID. Writes await the matching ACK and reject error statuses. Requests have payload/count limits and deadlines; operations are serialized off the render paths.
+
+The bundled OpenRGB executable is hash-checked against an embedded manifest and runs in a separate process on loopback. The optional elevated host checks its parent's executable and start time, owns a job object and stops on parent exit or a named stop event. It receives no arbitrary executable or configuration path. It creates its own empty temporary OpenRGB configuration, preserving upstream user settings and avoiding automatic third-party profiles/plugins. The standard-user UI sends only RGB SDK commands; the SYSTEM sensor collector is unchanged.
+
+The native server starts listening before detection completes. LOU waits for the pinned engine's completion signal before reading the inventory. The process can report cached RGB state before hardware writes finish, so a readback request is not used as a substitute for ACK.
+
+Software effects initialize a compatible Direct mode, then maintain a persistent SDK connection with sequential acknowledged color frames. A local high-resolution waitable timer (shared `FramePacer` utility only) schedules up to 60 FPS without a global timer-resolution change or spin loop. Device identity/topology and active modes are re-read once per second; changed-inventory notifications, rejected writes and connection loss stop the worker. Overlapping assignments cancel and await the prior worker before changing modes; different devices and disjoint zones may animate independently. Workers run outside WPF and display rendering. RGB profiles persist stable effect IDs and an optional explicit whole-case ARGB coverage limit.

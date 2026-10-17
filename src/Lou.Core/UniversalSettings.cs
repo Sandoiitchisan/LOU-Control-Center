@@ -89,7 +89,7 @@ public sealed class Settings:PlaybackSettings
     public bool IsNight(DateTime t)=>Night&&(NightStart>NightEnd?t.Hour>=NightStart||t.Hour<NightEnd:t.Hour>=NightStart&&t.Hour<NightEnd);
 }
 public sealed record SensorBinding(string Provider,string Board,string ControllerId,string SensorId,string Hardware="",string Topology="");
-public sealed record ConfirmedDisplay(string InstanceId,int Width,int Height,int Pm,int Sub,int Rotation);
+public sealed record ConfirmedDisplay(string InstanceId,int Width,int Height,int Pm,int Sub,int Rotation,bool Jpeg=true,bool BigEndian=false);
 public static class ConfigStore
 {
     public static bool IsInstalled=>File.Exists(Path.Combine(AppContext.BaseDirectory,"installed.mode"));

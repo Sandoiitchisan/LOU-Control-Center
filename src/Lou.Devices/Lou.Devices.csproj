@@ -1,1 +1,1 @@
-<Project Sdk="Microsoft.NET.Sdk"><ItemGroup><ProjectReference Include="../Lou.Core/Lou.Core.csproj"/><PackageReference Include="System.Management" Version="10.0.12"/></ItemGroup></Project>
+<Project Sdk="Microsoft.NET.Sdk"><ItemGroup><ProjectReference Include="../Lou.Core/Lou.Core.csproj"/><PackageReference Include="System.Management" Version="10.0.12"/><PackageReference Include="HidSharp" Version="2.6.4"/></ItemGroup></Project>

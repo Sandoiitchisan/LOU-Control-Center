@@ -1,5 +1,27 @@
 # Validation
 
+## Thermalright compatibility candidate — October 17, 2026
+
+Publication update: the owner subsequently uploaded this exact portable ZIP as `v2.2rc1`. Its implementation is now available under that tag. The test results below describe the candidate before upload; no new hardware validation is implied. See RELEASE-2.2rc1.md for the archive checksum and source relationship.
+
+- 242 automated application tests pass (zero failures/skips), including 51 compatibility cases for native HID framing, documented profiles, RGB565 byte order, rotated raster corners, exact physical routing, persistent codec validation and new layouts. Existing GPU fallback regression tests are included.
+- Release self-contained Windows x64 publish succeeds without warnings or errors. The published executable exits 0 for both French and English exports: 110 images per language across eleven geometries, with demo and missing data on all five pages.
+- Visually inspected rectangular system/music/weather/gaming pages, French and English text, centered missing-cover artwork, a compact portrait view and the 640 × 172 panoramic layout.
+- No LCD transport was opened for these tests. No changes to the private installation, saved page interval, sensor assignments, drivers or firmware. The local candidate is a portable build; no new Setup or public release was published.
+- The Trofeo HID reply is synthetic and based on public PM/SUB observations, not a captured private handshake. The user's anonymized report independently corroborates the USB family and Windows HID report sizes. Physical Trofeo output and RX 9060 XT temperature remain unconfirmed.
+- The compatibility matrix and licensing provenance review remain authoritative limits. Test success does not turn unowned devices into physically validated models.
+
+## RGB 2.2.0 development — October 13, 2026
+
+- 170 automated tests pass, including fragmented SDK packets, v6 unique routing IDs, physical-identity resolution, hot-swap refusal, malformed/truncated data, profiles, cancelled requests, rejected commands, delayed SDK acknowledgements and whole-case group isolation/capability checks.
+- Native standalone English universal preview exited 0 (PID 29120), exercised both languages and reported zero USB frames.
+- The shared module was ported to personal edition 1.5.0. Its 95 existing tests pass. Native standalone private preview exited 0 (PID 25868); five cooling assignments, server settings and native settings-file hash were preserved. Both RGB surfaces were visually inspected.
+- Native elevated detection found Kingston Fury DDR5, Gigabyte B650E AORUS ELITE X AX ICE and SteelSeries Apex Pro TKL Gen 3. GPU RGB was not detected. Engine and elevated helper exited after the diagnostic.
+- A RAM Static/cyan command initially changed OpenRGB cached state without the requested visual result. Matching ACK waits and rejection handling were added and covered by tests: software readback can precede hardware writes. After the correction, a native Windows test of 2.2.0 completed successfully and the user confirmed both Kingston modules displayed cyan on 13 October 2026. Other devices and effects remain unverified physically.
+- Whole-case/fan Direct cyan was physically confirmed on 13 October 2026, including motherboard-connected and hub-connected lights. The successful diagnostic used ordinary permissions. Static-effect attempts with ordinary/elevated access and a 30-second engine hold had no visible effect; no native-effect compatibility is claimed for this board. SDK ACK confirms software handling, not physical hardware completion.
+- Local portable and installer candidates are built, but have not been installed over the personal working edition or published. Restrictive-license provenance review is also a release gate.
+
+
 ## Distribution 2.1.1 — October 12, 2026
 
 - Release build without warnings; 145 automated tests pass, including language isolation, legacy settings, custom metadata, both display formats and update-feed validation.

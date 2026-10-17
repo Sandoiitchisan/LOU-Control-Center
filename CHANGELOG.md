@@ -1,5 +1,30 @@
 # Changelog
 
+## LOU Diagnostics 1.0.0
+
+- Standalone, self-contained Windows x64 executable for internal/USB display diagnostics, with French/English UI.
+- Automatic passive collection, user-selected text report location, in-app preview and a GitHub issue link for manual attachment.
+- Standard USB/HID metadata, per-interface driver information and explicit unconfirmed candidates beyond the two currently supported USB families.
+- No RGB scan, monitor inventory, proprietary LCD commands, automatic upload or network requests by the collector. Serial numbers, personal paths and arbitrary device names are not exported.
+- Isolated collection worker with a deadline and sanitized partial reports.
+
+## 2.2 RC1 — 2026-10-17
+
+Public prerelease tag: [`v2.2rc1`](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2rc1). Portable Windows x64 only; the embedded application version is `2.2.0`. Stable 2.1.1 remains unchanged. [Exact source/build notes](docs/RELEASE-2.2rc1.md).
+
+- Extended Thermalright detection, native HID type-2 support for the Trofeo 6.86-inch family, LY1 framing and an ALi WinUSB path. Known SCSI/HID type-3 variants are listed without sending unsupported commands; physical validation of new families is pending.
+- Added documented RGB565 profiles, persistent codec checks, exact per-device routing and wide layouts for 1280 × 480 / 1600 × 720 and related rectangular screens. Existing page timing and orientation preferences remain independent.
+- Fixed AMD fallback temperature preservation by matching physical GPU identities and isolating optional VRAM failures. The reported RX 9060 XT case still needs hardware confirmation.
+- Integrated OpenRGB 1.0 with French/English controls for devices, zones, colors, native effects, brightness and speed.
+- Optimized Kingston Fury RAM rainbow automatically uses the RAM's built-in effect, eliminating continuous SMBus color updates. Slow controllers no longer block software animation frames for unrelated devices.
+- Added 17 built-in RGB choices with software animations, adjustable speed/brightness, profile persistence and independent device groups. Persistent SDK streams target up to 60 FPS without building a frame backlog; identity changes and disconnects stop animation.
+- Persistent scene profiles, ARGB LED counts and optional startup application with physical-identity checks.
+- Local-only RGB engine, optional isolated elevation, lifecycle cleanup and bounded SDK 6 commands with acknowledgements.
+- Prepared source-available licensing for original LOU code; legacy releases and third-party grants remain unchanged.
+- 242 application tests passed; the standalone executable generated 220 preview images across eleven geometries in French and English. New display families and the RX 9060 XT report still require physical confirmation.
+- The source is published with the RC1. Licensing provenance review remains unresolved; publication does not clear the intended licensing transition.
+
+
 ## 2.1.1
 
 - French and English in the same application: choose **Settings → Language**, then **Save and apply**. The interface, tray menu, status messages and all display layouts switch together without restarting.

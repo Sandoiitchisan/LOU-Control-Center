@@ -328,5 +328,15 @@
   "Décor manquant : ": "Missing background: ",
   "Invalid language.": "Invalid language.",
   "Le fichier de réglages est illisible. Il est conservé ; restaurez settings.json.bak dans {0} avant de relancer.\n\n{1}": "The settings file cannot be read. It has been preserved; restore settings.json.bak in {0} before restarting.\n\n{1}",
-  "Langue, mises à jour et préférences, au même endroit.": "Language, updates and preferences, all in one place."
+  "Langue, mises à jour et préférences, au même endroit.": "Language, updates and preferences, all in one place.",
+  "Profil USB PM={0} SUB={1}": "USB profile PM={0} SUB={1}",
+  "Réponse HID invalide ou tronquée.": "Invalid or truncated HID response.",
+  "HID PM={0} SUB={1} non documenté : transfert bloqué.": "Undocumented HID PM={0} SUB={1}: transfer blocked.",
+  "Réponse ALi invalide ou tronquée.": "Invalid or truncated ALi response.",
+  "Famille HID non prise en charge.": "Unsupported HID family.",
+  "Interface HID absente ou ambiguë. Aucun pilote n'a été modifié.": "HID interface missing or ambiguous. No driver has been changed.",
+  "Écran identifié, mais ce transport n'est pas encore pris en charge. Aucun pilote n'a été modifié.": "Display identified, but this transport is not supported yet. No driver has been changed.",
+  "Endpoint ALi non documenté.": "Undocumented ALi endpoint.",
+  "Délai de transfert LCD dépassé.": "LCD transfer timed out.",
+  "Transport non pris en charge": "Unsupported transport"
 }

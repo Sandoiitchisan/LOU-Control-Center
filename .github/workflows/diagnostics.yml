@@ -1,0 +1,28 @@
+name: LOU Diagnostics
+on:
+  push:
+    paths: ['src/Lou.Diagnostics/**', 'tests/Lou.Diagnostics.Tests/**', 'scripts/build-diagnostics.ps1', 'Directory.Build.props', '.github/workflows/diagnostics.yml']
+  pull_request:
+    paths: ['src/Lou.Diagnostics/**', 'tests/Lou.Diagnostics.Tests/**', 'scripts/build-diagnostics.ps1', 'Directory.Build.props', '.github/workflows/diagnostics.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostics:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.401'
+      - name: Test and package standalone diagnostics
+        shell: pwsh
+        run: ./scripts/build-diagnostics.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LOU-Diagnostics-win-x64
+          path: |
+            artifacts/LOU-Diagnostics.exe
+            artifacts/LOU-Diagnostics.exe.sha256
+            artifacts/tests/diagnostics.trx
+          if-no-files-found: error
