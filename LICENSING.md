@@ -1,6 +1,6 @@
 # Licensing of LOU Control Center
 
-**RC1 publication status:** the owner published the portable 2.2 RC1 candidate on 17 October 2026, and its source is now available. The protocol-provenance review in `docs/LICENSING_REVIEW.md` is **not resolved**. Publication is not evidence that all preexisting material can be relicensed. The terms below describe the owner's intended grant only to the extent of rights actually held; they do not override third-party or earlier GPL grants. The public 2.1.1 release has not been relicensed.
+**2.2 publication status:** the owner published RC1 and requested its promotion to stable 2.2.0 on 17 October 2026. Corresponding sources are available. The protocol-provenance review in `docs/LICENSING_REVIEW.md` is **not resolved**. Publication or stable promotion is not evidence that all preexisting material can be relicensed. The terms below describe the owner's intended grant only to the extent of rights actually held; they do not override third-party or earlier GPL grants. The public 2.1.1 release has not been relicensed.
 
 ## Original LOU material, starting with 2.2.0
 

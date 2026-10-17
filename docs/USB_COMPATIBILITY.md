@@ -1,6 +1,6 @@
-# Display compatibility — 2.2 RC1, 17 October 2026
+# Display compatibility — 2.2.0, 17 October 2026
 
-This describes the [2.2 RC1 portable prerelease](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2rc1), whose embedded version is 2.2.0. Stable 2.1.1 downloads have **not** been replaced. Implemented protocol support is not proof of physical compatibility with every product sold under a family name.
+This describes [stable 2.2.0](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.0), promoted from RC1 without changing the display implementation. Users reported positive results with additional screens, but exact models/revisions were not supplied in the promotion feedback. Implemented protocol support is not proof of physical compatibility with every product sold under a family name; the per-model validation limits below remain applicable.
 
 ## Transport coverage
 
@@ -46,4 +46,4 @@ The [research record](THERMALRIGHT_COMPATIBILITY_RESEARCH.md) distinguishes offi
 - [InfoPanel model database](https://github.com/habibrehmansg/infopanel/blob/8a3062d7fbcee3381c2fd01e1a3a62cac5756c42/InfoPanel/ThermalrightPanel/ThermalrightPanelModelDatabase.cs) — product/render geometry comparison, GPL-3.0.
 - [Microsoft HID report documentation](https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/sending-hid-reports) and [HidSharp 2.6.4](https://www.nuget.org/packages/HidSharp/2.6.4) — native Windows HID API access; HidSharp is Apache-2.0 and its license is included.
 
-No Thermalright binary or firmware is bundled. RC1 publication does not clear the pending [licensing transition](LICENSING_REVIEW.md). These protocol additions remain release-candidate functionality requiring physical validation.
+No Thermalright binary or firmware is bundled. Stable promotion does not clear the pending [licensing transition](LICENSING_REVIEW.md). Per-model physical validation remains necessary beyond the documented evidence.

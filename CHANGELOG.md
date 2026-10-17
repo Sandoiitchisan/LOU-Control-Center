@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.0 — 2026-10-17
+
+Stable promotion of 2.2 RC1, retaining its application implementation. [Release and downloads](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.0).
+
+- RGB controls, expanded Thermalright protocols and rectangular layouts from RC1 are now in the stable channel.
+- User feedback confirms that the reported Radeon RX 9060 XT temperature issue is fixed. Positive additional-screen feedback was also received; no blanket model/revision compatibility claim is made.
+- Self-contained Windows x64 Setup, portable ZIP and corresponding sources are provided. The in-app stable update check can offer 2.2.0 to older stable installations.
+- RC1 remains available as release history. Portrait-specific layouts are planned for 2.2.1 and are not part of this stable promotion.
+- Existing hardware limitations and the unresolved licensing provenance review still apply; stability promotion does not constitute licensing clearance.
+
 ## LOU Diagnostics 1.0.0
 
 - Standalone, self-contained Windows x64 executable for internal/USB display diagnostics, with French/English UI.

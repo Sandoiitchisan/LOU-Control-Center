@@ -1,5 +1,12 @@
 # Validation
 
+## Stable 2.2.0 promotion — October 17, 2026
+
+- The user confirmed that the reported RX 9060 XT temperature problem is fixed. This is a user-reported hardware result, not a new measurement made by the development agent.
+- The user also reported positive additional-screen results without supplying exact model/revision details. The compatibility matrix therefore retains its specific hardware-validation limits.
+- The application implementation is unchanged from RC1. Its 242 application tests, 17 Diagnostics tests and source-only rebuild passed; all four GitHub Actions jobs triggered by the RC1 source publication succeeded.
+- Portrait-specific layouts are reserved for 2.2.1. No installed private application, saved device assignments or live LCD configuration was changed during promotion.
+
 ## Thermalright compatibility candidate — October 17, 2026
 
 Publication update: the owner subsequently uploaded this exact portable ZIP as `v2.2rc1`. Its implementation is now available under that tag. The test results below describe the candidate before upload; no new hardware validation is implied. See RELEASE-2.2rc1.md for the archive checksum and source relationship.
