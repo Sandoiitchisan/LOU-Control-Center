@@ -5,15 +5,15 @@
 A Windows application that transforms your Thermalright PC case and AIO displays into customizable dashboards, with optional RGB lighting control.
 
 ![Windows 10 and 11 x64](https://img.shields.io/badge/Windows-10%20%7C%2011%20x64-0078D4?style=flat-square)
-![Stable 2.2.1](https://img.shields.io/badge/stable-2.2.1-68E4CF?style=flat-square)
+![Stable 2.2.2](https://img.shields.io/badge/stable-2.2.2-68E4CF?style=flat-square)
 
 [![PolyForm Strict License](https://img.shields.io/badge/license-PolyForm_Strict-9B5CFF?style=flat-square)](LICENSING.md)
 
-[![Download for Windows — Standalone x64 Installer](docs/images/telecharger.svg)](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.1/LOU-Control-Center-Setup-2.2.1-win-x64.exe)
+[![Download for Windows — Standalone x64 Installer](docs/images/telecharger.svg)](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.2/LOU-Control-Center-Setup-2.2.2-win-x64.exe)
 
-[Portable version](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.1/LOU-Control-Center-Portable-2.2.1-win-x64.zip) · [Release notes](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.1) · [Installation guide](docs/INSTALLATION.md)
+[Portable version](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.2/LOU-Control-Center-Portable-2.2.2-win-x64.zip) · [Release notes](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.2) · [Installation guide](docs/INSTALLATION.md)
 
-[Browse 2.2.1 source](https://github.com/Sandoiitchisan/LOU-Control-Center/tree/v2.2.1) · [Download source ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.1/LOU-Control-Center-Sources-2.2.1.zip) · [All releases](https://github.com/Sandoiitchisan/LOU-Control-Center/releases)
+[Browse 2.2.2 source](https://github.com/Sandoiitchisan/LOU-Control-Center/tree/v2.2.2) · [Download source ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.2/LOU-Control-Center-Sources-2.2.2.zip) · [All releases](https://github.com/Sandoiitchisan/LOU-Control-Center/releases)
 
 ![LOU Control Center System page on a widescreen display](docs/images/systeme.png)
 
@@ -31,21 +31,20 @@ Use an AIO display, a larger case display, or both simultaneously. Choose which 
 
 **Screen not recognized?** [Download LOU Diagnostics](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/diagnostics-v1.0.0/LOU-Diagnostics.exe), a separate portable Windows tool that generates an anonymized local text report for display compatibility issues. It performs no RGB scan, needs no LOU installation, and uploads nothing. Its GitHub button opens a new issue where you can attach the report yourself. [Instructions and source](docs/DIAGNOSTICS.md).
 
-## What’s new in 2.2.1
+## What’s new in 2.2.2
 
-- Portrait layouts for all five pages: System, Weather, Music, Gaming and Ambient.
-- Automatic layout adaptation: stacked sections on tall displays and compact arrangements on smaller screens.
-- Portrait cooling view, using your existing CPU temperature and fan/pump assignments.
-- Proportionate graphics: gauges, text and album artwork retain their proportions.
-- Taller portrait preview inside the application.
-- French and English support, including orientation guidance in display settings.
-- Each display keeps its own orientation, selected pages, page interval and frame-rate settings.
+- Larger portrait text across all five pages and the dedicated cooling view, addressing issue #3.
+- An independent **Portrait text size** slider for each display: **100–150%, with 125% by default** for new and existing settings.
+- Bounded text areas, complete numeric readings and ellipses for long names.
+- Wider hourly forecast rows on compact portrait screens, retaining all six forecasts.
+- French and English controls and guidance.
+- Existing sensor assignments, page intervals, frame-rate settings and landscape/square layouts are preserved.
 
 ### Enable portrait mode
 
 1. Open **Displays** and select your screen.
 2. Choose **90° or 270°** for a landscape display mounted vertically.
-3. **Save and apply** your settings.
+3. Adjust **Portrait text size** if needed, then **Save and apply** your settings.
 
 The layout adapts automatically. Use the calibration pattern to check the direction if needed. Displays with native portrait dimensions also receive the portrait layout.
 
@@ -59,11 +58,11 @@ The layout adapts automatically. Use the calibration pattern to check the direct
 - Native HID type-2 support for the Trofeo 6.86-inch family, LY1 and ALi/WinUSB paths, documented RGB565 formats and layouts for 1280 × 480, 1600 × 720 and related rectangular displays.
 - Improved AMD fallback temperature handling and physical GPU identity matching. The reported RX 9060 XT temperature issue is confirmed fixed by user feedback.
 
-**2.2.1 is the latest stable release.** Choose the self-contained Windows x64 installer or portable ZIP below. Older stable installations can use **Settings → Updates** to open the matching download.
+**2.2.2 is the latest stable release.** Choose the self-contained Windows x64 installer or portable ZIP below. Older stable installations can use **Settings → Updates** to open the matching download.
 
-The release passed **256 automated application tests** and generated **320 preview images** across sixteen geometries in French and English. Community feedback confirms working portrait pages, with larger text requested in [issue #3](https://github.com/Sandoiitchisan/LOU-Control-Center/issues/3). This is not a blanket compatibility claim for every display model or revision. SCSI and HID type-3 image output remain unsupported; GPU RGB is not validated on the reference GPU.
+The release passed **268 automated application tests** and generated **320 preview images** across sixteen geometries in French and English. Larger, adjustable portrait text addresses the feedback in [issue #3](https://github.com/Sandoiitchisan/LOU-Control-Center/issues/3). This is not a blanket compatibility claim for every display model or revision. SCSI and HID type-3 image output remain unsupported; GPU RGB is not validated on the reference GPU.
 
-[Full changelog](CHANGELOG.md) · [2.2.1 release details](docs/RELEASE-2.2.1.md) · [RGB support and limits](docs/RGB.md)
+[Full changelog](CHANGELOG.md) · [2.2.2 release details](docs/RELEASE-2.2.2.md) · [RGB support and limits](docs/RGB.md)
 
 ## Five pages for your everyday needs
 
@@ -102,7 +101,7 @@ A dedicated view for CPU temperature and cooling information is also available.
 
 ### Windows installer — Recommended
 
-[Download the standalone 2.2.1 installer for Windows x64](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.1/LOU-Control-Center-Setup-2.2.1-win-x64.exe)
+[Download the standalone 2.2.2 installer for Windows x64](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.2/LOU-Control-Center-Setup-2.2.2-win-x64.exe)
 
 **The installer includes the required components**: the .NET runtime, monitoring tools, the official signed PawnIO installer for hardware sensors, and visual assets. No additional downloads are required to install these components. An internet connection is still required for weather and GitHub update checks.
 
@@ -114,11 +113,11 @@ A dedicated view for CPU temperature and cooling information is also available.
 
 The application then runs with standard user permissions. Advanced sensor monitoring is handled by the background component installed during setup.
 
-> The LOU installer is not yet publisher-signed, so Windows may display a reputation warning. Included third-party components are their official signed versions. File checksums are available in [SHA256SUMS.txt](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.1/SHA256SUMS.txt).
+> The LOU installer is not yet publisher-signed, so Windows may display a reputation warning. Included third-party components are their official signed versions. File checksums are available in [SHA256SUMS.txt](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.2/SHA256SUMS.txt).
 
 ### Portable version
 
-[Download the portable 2.2.1 ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.1/LOU-Control-Center-Portable-2.2.1-win-x64.zip), extract its entire contents into a writable folder, and launch `Lou.ControlCenter.exe`.
+[Download the portable 2.2.2 ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.2/LOU-Control-Center-Portable-2.2.2-win-x64.zip), extract its entire contents into a writable folder, and launch `Lou.ControlCenter.exe`.
 
 Settings and images remain in the `Data` folder. LOU does not create a persistent background task in portable mode. Advanced sensor monitoring may require Windows administrator approval and the installation of PawnIO if it is not already present. Once enabled, this temporary monitoring component stops when the application closes.
 
@@ -139,7 +138,7 @@ Both displays have been successfully tested **running simultaneously**, with ind
 
 **These are currently the only two officially validated devices.** Other Thermalright displays using compatible USB controllers and recognized JPEG protocols may also work, but compatibility is not guaranteed until verified on actual hardware.
 
-### Technical compatibility — 2.2.1
+### Technical compatibility — 2.2.2
 
 | Component | Current support |
 |---|---|
@@ -165,17 +164,16 @@ Own another Thermalright display? Open a [GitHub Issue](https://github.com/Sando
 
 Portrait layouts, RGB controls and expanded display support are available. Next areas of work:
 
-1. **2.2.2 — prepared for testing:** larger portrait text, with an independent 100–150% text-size slider per display (125% by default), following [issue #3](https://github.com/Sandoiitchisan/LOU-Control-Center/issues/3). See [changes and validation](docs/RELEASE-2.2.2.md). The stable downloads above remain 2.2.1 until publication.
-2. **2.2.3 — next development target:** investigate and validate RGB and screen support for the reference ASRock graphics card; support is not yet confirmed.
-3. **Later:** MP4 video backgrounds, broader display/RGB validation and remaining display transports when reliable evidence and hardware testing are available.
+1. **2.2.3 — next development target:** investigate and validate RGB and screen support for the reference ASRock graphics card; support is not yet confirmed.
+2. **Later:** MP4 video backgrounds, broader display/RGB validation and remaining display transports when reliable evidence and hardware testing are available.
 
 These are development directions, not promised release dates.
 
 ## Project status
 
-**Current release: 2.2.1.** Its source tag matches the published installer and portable build. Automated tests and GitHub Actions pass; release checksums and corresponding source archives are available with the downloads.
+**Current release: 2.2.2.** Its source tag matches the published installer and portable build. Automated tests and GitHub Actions pass; release checksums and corresponding source archives are available with the downloads.
 
-Hardware and installation evidence is version-specific. Earlier reference-PC tests covered installation, sensor collection, settings preservation, uninstallation and simultaneous LCD output around 24 FPS / 10 FPS. The 2.2.1 packages were built and checked through standalone preview exports; no new installer execution or measured portrait USB frame rate is claimed. See the validation report for the exact scope.
+Hardware and installation evidence is version-specific. Earlier reference-PC tests covered installation, sensor collection, settings preservation, uninstallation and simultaneous LCD output around 24 FPS / 10 FPS. The 2.2.2 packages were built and checked through standalone preview exports; no new installer execution or measured portrait USB frame rate is claimed. See the validation report for the exact scope.
 
 These results apply to the tested hardware. Further testing on clean Windows installations, different graphics cards, and additional displays will help expand compatibility validation. Frame rates depend on the display model and configuration.
 
@@ -201,7 +199,7 @@ The project is built with **C# / .NET 10, WPF, and SkiaSharp**.
 ./scripts/build.ps1 -Installer
 ```
 
-The .NET 10 SDK is required to build from source, but not to run published packages. The GitHub workflow builds Windows packages and runs automated tests. The [2.2.1 tag](https://github.com/Sandoiitchisan/LOU-Control-Center/tree/v2.2.1) contains the stable implementation, including the separate RGB and Diagnostics projects. See [release and build details](docs/RELEASE-2.2.1.md). Published tags identify the original build source; `main` also carries subsequent documentation corrections. Maintainers can follow the [release checklist](docs/RELEASING.md).
+The .NET 10 SDK is required to build from source, but not to run published packages. The GitHub workflow builds Windows packages and runs automated tests. The [2.2.2 tag](https://github.com/Sandoiitchisan/LOU-Control-Center/tree/v2.2.2) contains the stable implementation, including the separate RGB and Diagnostics projects. See [release and build details](docs/RELEASE-2.2.2.md). Published tags identify the original build source; `main` also carries subsequent documentation corrections. Maintainers can follow the [release checklist](docs/RELEASING.md).
 
 [Contributing](CONTRIBUTING.md) · [Architecture](docs/ARCHITECTURE.md) · [Security](SECURITY.md)
 

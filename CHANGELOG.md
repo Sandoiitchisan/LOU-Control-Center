@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.2 — prepared, not yet published
+## 2.2.2 — 2026-10-18
 
 - Larger portrait typography in all five pages and the dedicated cooling view, addressing [issue #3](https://github.com/Sandoiitchisan/LOU-Control-Center/issues/3).
 - Independent **Portrait text size** slider for each display, from 100% to 150%, with 125% as the default for both new and existing configurations.

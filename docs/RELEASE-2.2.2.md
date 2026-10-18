@@ -1,6 +1,6 @@
 # LOU Control Center 2.2.2 — larger portrait text
 
-Prepared for testing; not yet published as a stable GitHub release. The currently published stable downloads remain 2.2.1.
+Published on 18 October 2026 as the latest stable release. [Release and downloads](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.2). The immutable tag identifies source commit `edd2f1769beafe147034b1cc010ff20a78ced642`, matching the published packages. Packaged documentation retains the build snapshot; publication notes on main have been updated without replacing the binaries.
 
 ## Readability
 
