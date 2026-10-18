@@ -1,7 +1,3 @@
-> **Development branch: 2.2.1 portrait candidate.** The installer and portable candidate are prepared for testing; see [portrait layouts and validation](docs/RELEASE-2.2.1.md). The published stable downloads below remain 2.2.0.
-
-<div align="center">
-
 # LOU Control Center
 
 **Your PC. Your displays. Your information.**
@@ -47,7 +43,7 @@ Use an AIO display, a larger case display, or both simultaneously. Choose which 
 - French and English support, including orientation guidance in display settings.
 - Each display keeps its own orientation, selected pages, page interval and frame-rate settings.
 
-## Enable portrait mode
+### Enable portrait mode
 
 - Open Displays and select your screen.
 - Choose 90° or 270° for a landscape display mounted vertically.
