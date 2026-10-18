@@ -338,5 +338,8 @@
   "Écran identifié, mais ce transport n'est pas encore pris en charge. Aucun pilote n'a été modifié.": "Display identified, but this transport is not supported yet. No driver has been changed.",
   "Endpoint ALi non documenté.": "Undocumented ALi endpoint.",
   "Délai de transfert LCD dépassé.": "LCD transfer timed out.",
-  "Transport non pris en charge": "Unsupported transport"
+  "Transport non pris en charge": "Unsupported transport",
+  "REFROIDISSEMENT": "COOLING",
+  "Choisissez 90° ou 270° pour un écran monté verticalement, puis enregistrez. Les pages s’adaptent automatiquement au format obtenu.": "Choose 90° or 270° for a vertically mounted display, then save. Pages automatically adapt to the resulting format.",
+  "RÉSEAU · RÉCEPTION": "NETWORK · DOWNLOAD"
 }

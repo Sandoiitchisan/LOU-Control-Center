@@ -88,5 +88,6 @@
   "Loc_9d4f930db3c8cf62": "Vérifier les nouvelles versions au démarrage",
   "Loc_f1db3274a2c0b692": "Vérifier maintenant",
   "Loc_70dfd972631a95af": "Télécharger la mise à jour",
-  "Loc_a4ed56bda8a42b1e": "Les mises à jour sont proposées depuis GitHub. Aucune installation automatique."
+  "Loc_a4ed56bda8a42b1e": "Les mises à jour sont proposées depuis GitHub. Aucune installation automatique.",
+  "Loc_portrait_orientation": "Choisissez 90° ou 270° pour un écran monté verticalement, puis enregistrez. Les pages s’adaptent automatiquement au format obtenu."
 }

@@ -24,6 +24,12 @@ public sealed partial class UniversalRenderer:IDisposable
         if(Image(path) is {} background){float drift=(float)(Math.Sin(elapsed*.12)*s.Animation*7);Cover(c,background,new(-8+drift,-8,s.Width+8+drift,s.Height+8));}
         using(var shade=new SKPaint{Color=new(3,9,20,180)})c.DrawRect(0,0,s.Width,s.Height,shade);
         accent=SKColor.TryParse(s.Accent,out var color)?color:new(0,229,255);
+        if(s.Height>s.Width){
+            c.Scale(s.Width/480f);float height=s.Height*480f/s.Width;
+            Portrait(c,page,d,s,now,height);
+            if(s.IsNight(now)){using var dim=new SKPaint{Color=new(0,0,12,65)};c.DrawRect(0,0,480,height,dim);}
+            return result;
+        }
         if(!s.CoolingOnly&&(float)s.Width/s.Height>=1.6f){
             c.Scale(s.Height/480f);float width=s.Width*480f/s.Height;
             Landscape(c,page,d,s,now,width);
