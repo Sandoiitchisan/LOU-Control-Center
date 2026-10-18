@@ -22,7 +22,9 @@ public class PlaybackSettings
     public int PreviewFps {get;set;}=24;
     public int JpegQuality {get;set;}=90;
     public bool CoolingOnly {get;set;}
+    public int PortraitTextPercent {get;set;}=125;
     public void ValidatePlayback(){
+        if(PortraitTextPercent is <100 or >150)throw new InvalidDataException(Localizer.T("Taille des textes en portrait : 100 à 150 %."));
         if(PageIntervalSeconds is <3 or >3600||UsbFps is <1 or >30||PreviewFps is <1 or >30||JpegQuality is <70 or >95||!double.IsFinite(TransitionSeconds)||TransitionSeconds is <0 or >5)throw new InvalidDataException(Localizer.T("Durée : 3 à 3 600 s ; cadence : 1 à 30 i/s ; transition : 0 à 5 s."));
         if(Pages==null||Pages.Count!=5||Pages.Select(p=>p.Id).Distinct().Count()!=5||Pages.Any(p=>!Enum.IsDefined(p.Id)||!Enum.IsDefined(p.Transition))||!Pages.Any(p=>p.Enabled))throw new InvalidDataException(Localizer.T("Choisissez au moins une des cinq pages."));
         if(!Enum.IsDefined(Mode)||!Enum.IsDefined(FixedPage)||Mode==RotationMode.Fixed&&!Pages.Any(p=>p.Id==FixedPage&&p.Enabled))throw new InvalidDataException(Localizer.T("La page fixe doit être activée."));
@@ -85,7 +87,7 @@ public sealed class Settings:PlaybackSettings
         if(Displays==null||Displays.Count>8||Displays.Select(d=>d.InstanceId).Distinct(StringComparer.OrdinalIgnoreCase).Count()!=Displays.Count)throw new InvalidDataException(Localizer.T("Chaque écran doit avoir une identité unique."));
         foreach(var d in Displays){d.ValidatePlayback();if(string.IsNullOrWhiteSpace(d.InstanceId)||d.Name.Length>80||d.Rotation is not (0 or 90 or 180 or 270)||d.PreviewWidth is <240 or >3840||d.PreviewHeight is <172 or >2160||d.Profile is {} p&&(p.InstanceId!=d.InstanceId||p.Width is <240 or >3840||p.Height is <172 or >2160||p.Rotation is not (0 or 90 or 180 or 270)))throw new InvalidDataException(Localizer.T("Profil écran invalide."));}
     }
-    public Settings ForDisplay(DisplaySettings d){var s=ConfigStore.Clone(this);s.Displays=[];s.Pages=ConfigStore.Clone(d.Pages);s.Mode=d.Mode;s.FixedPage=d.FixedPage;s.PageIntervalSeconds=d.PageIntervalSeconds;s.TransitionSeconds=d.TransitionSeconds;s.UsbFps=d.UsbFps;s.PreviewFps=d.UsbFps;s.JpegQuality=d.JpegQuality;s.CoolingOnly=d.CoolingOnly;int w=d.Profile?.Width??d.PreviewWidth,h=d.Profile?.Height??d.PreviewHeight;s.Width=d.Rotation is 90 or 270?h:w;s.Height=d.Rotation is 90 or 270?w:h;return s;}
+    public Settings ForDisplay(DisplaySettings d){var s=ConfigStore.Clone(this);s.Displays=[];s.Pages=ConfigStore.Clone(d.Pages);s.Mode=d.Mode;s.FixedPage=d.FixedPage;s.PageIntervalSeconds=d.PageIntervalSeconds;s.TransitionSeconds=d.TransitionSeconds;s.UsbFps=d.UsbFps;s.PreviewFps=d.UsbFps;s.JpegQuality=d.JpegQuality;s.CoolingOnly=d.CoolingOnly;s.PortraitTextPercent=d.PortraitTextPercent;int w=d.Profile?.Width??d.PreviewWidth,h=d.Profile?.Height??d.PreviewHeight;s.Width=d.Rotation is 90 or 270?h:w;s.Height=d.Rotation is 90 or 270?w:h;return s;}
     public bool IsNight(DateTime t)=>Night&&(NightStart>NightEnd?t.Hour>=NightStart||t.Hour<NightEnd:t.Hour>=NightStart&&t.Hour<NightEnd);
 }
 public sealed record SensorBinding(string Provider,string Board,string ControllerId,string SensorId,string Hardware="",string Topology="");

@@ -165,9 +165,9 @@ Own another Thermalright display? Open a [GitHub Issue](https://github.com/Sando
 
 Portrait layouts, RGB controls and expanded display support are available. Next areas of work:
 
-1. **Portrait readability:** refine text sizing based on [community feedback](https://github.com/Sandoiitchisan/LOU-Control-Center/issues/3).
-2. **MP4 video backgrounds:** explore video loops alongside static backgrounds.
-3. **Broader hardware validation:** document additional display and RGB-controller results, including GPU lighting, and implement remaining transports when reliable evidence and hardware testing are available.
+1. **2.2.2 — prepared for testing:** larger portrait text, with an independent 100–150% text-size slider per display (125% by default), following [issue #3](https://github.com/Sandoiitchisan/LOU-Control-Center/issues/3). See [changes and validation](docs/RELEASE-2.2.2.md). The stable downloads above remain 2.2.1 until publication.
+2. **2.2.3 — next development target:** investigate and validate RGB and screen support for the reference ASRock graphics card; support is not yet confirmed.
+3. **Later:** MP4 video backgrounds, broader display/RGB validation and remaining display transports when reliable evidence and hardware testing are available.
 
 These are development directions, not promised release dates.
 

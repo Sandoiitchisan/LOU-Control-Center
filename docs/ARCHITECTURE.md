@@ -8,6 +8,8 @@ The project is independent of the personal edition. No server connection, city, 
 - Rendering: panoramic, rectangular landscape, compact and full-height portrait compositions. Portrait layout uses a fixed logical width with a variable height; circles, fonts and artwork are never stretched. 90/270-degree orientation changes logical dimensions before physical rotation. JPEG and RGB565 encoding share explicit raster checks. An optional cooling view is available in square and portrait layouts.
 - App: a render/transport thread pair per display, cancellable high-resolution pacing and latest-frame-only buffering. WPF samples previews at 5 Hz without blocking rendering. Requested frame limits are not measured FPS.
 
+Portrait typography has a per-display `PortraitTextPercent` setting (100–150, default 125). Missing fields in older settings receive the default; the setting is copied by `ForDisplay` into each worker's render settings. It scales text inside non-overlapping layout slots rather than scaling the raster. Font metrics bound the line height; readings fit their width, and long metadata is ellipsized on text-element boundaries. Landscape/square render paths do not consult this setting. It does not affect USB geometry or scheduling.
+
 ## Reading identity
 
 Assignments include provider, motherboard, controller ID, sensor ID, hardware name and topology fingerprint. The fingerprint comes from sorted controller inventory and physical GPU IDs, never RPM or enumeration order. Inventory changes block assignments instead of silently reassigning them. Motherboard/Super I/O names do not identify headers: users must confirm wiring in the BIOS or reliable documentation.
