@@ -18,7 +18,7 @@ public sealed class ReleaseUpdates : IDisposable
         http = handler == null ? new() : new(handler);
         http.Timeout = TimeSpan.FromSeconds(12);
         http.MaxResponseContentBufferSize = 1024 * 1024;
-        http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("LOU-Control-Center", "2.2.1"));
+        http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("LOU-Control-Center", "2.2.2"));
         http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
         http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
     }

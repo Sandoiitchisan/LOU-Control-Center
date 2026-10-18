@@ -341,5 +341,8 @@
   "Transport non pris en charge": "Unsupported transport",
   "REFROIDISSEMENT": "COOLING",
   "Choisissez 90° ou 270° pour un écran monté verticalement, puis enregistrez. Les pages s’adaptent automatiquement au format obtenu.": "Choose 90° or 270° for a vertically mounted display, then save. Pages automatically adapt to the resulting format.",
-  "RÉSEAU · RÉCEPTION": "NETWORK · DOWNLOAD"
+  "RÉSEAU · RÉCEPTION": "NETWORK · DOWNLOAD",
+  "Taille des textes en portrait": "Portrait text size",
+  "Taille des textes en portrait : 100 à 150 %.": "Portrait text size: 100 to 150%.",
+  "125 % par défaut. Réglage indépendant pour cet écran, appliqué après enregistrement. Les textes s’adaptent à la place disponible ; les formats paysage et carré restent inchangés.": "125% by default. Independent for this display, applied after saving. Text fits the available space; landscape and square layouts stay unchanged."
 }

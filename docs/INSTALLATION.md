@@ -26,6 +26,7 @@ Run Setup again to repair files and recreate the collector task. Settings are pr
 
 ## Troubleshooting
 
+- Portrait text too small (2.2.2 and later): in **Displays**, select the display, adjust **Portrait text size** (100–150%, default 125%), then **Save and apply**. Each display keeps its own choice. Text remains bounded by its cards; long names may be shortened. This setting does not change landscape or square layouts.
 - No display: check the internal USB cable, close TRCC and wait for detection. Devices declaring `USB/MS_COMP_WINUSB` use Windows’ built-in WinUSB automatically. Other variants may require their manufacturer’s driver. LOU does not change firmware or driver security settings.
 - Missing temperatures or RPM: check Sensors, then `%ProgramData%/LouControlCenterUniversal/Sensors/installation.log`. Restart Windows if requested after PawnIO installation. Some components expose no reading; LOU shows an absence, never an invented value.
 - Missing FPS: for the installed edition, check that `LOU Control Center Universal - Capteurs` is running in Task Scheduler. This persistent task name is unchanged between languages. The interface does not need administrator privileges. Protected games or unobserved APIs may remain unavailable.

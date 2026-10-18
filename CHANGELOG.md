@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.2 — prepared, not yet published
+
+- Larger portrait typography in all five pages and the dedicated cooling view, addressing [issue #3](https://github.com/Sandoiitchisan/LOU-Control-Center/issues/3).
+- Independent **Portrait text size** slider for each display, from 100% to 150%, with 125% as the default for both new and existing configurations.
+- Text fits non-overlapping areas: readings remain complete, long names use ellipses, and short portrait panels use wider hourly forecast rows.
+- Landscape and square layouts, sensor assignments, page intervals and USB frame-rate settings are preserved.
+- French and English controls and help. See [2.2.2 release details](docs/RELEASE-2.2.2.md).
+
 ## 2.2.1 — 2026-10-18
 
 - Responsive portrait compositions for all five dashboard pages, plus the dedicated cooling view.
