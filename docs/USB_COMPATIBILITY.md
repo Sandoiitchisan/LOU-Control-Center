@@ -1,10 +1,12 @@
-# Display compatibility — 2.2.0, 17 October 2026
+# Display compatibility — 2.2.1, 18 October 2026
 
-This describes [stable 2.2.0](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.0), promoted from RC1 without changing the display implementation. Users reported positive results with additional screens, but exact models/revisions were not supplied in the promotion feedback. Implemented protocol support is not proof of physical compatibility with every product sold under a family name; the per-model validation limits below remain applicable.
+This describes [stable 2.2.1](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.1). Its display protocols are unchanged from 2.2.0; 2.2.1 adds portrait layouts. Users reported positive results with additional screens, but exact models/revisions were not supplied in the promotion feedback. Implemented protocol support is not proof of physical compatibility with every product sold under a family name; the per-model validation limits below remain applicable.
+
+Community feedback in [issue #3](https://github.com/Sandoiitchisan/LOU-Control-Center/issues/3) reports working portrait pages and requests larger text. The report does not identify enough hardware detail to promote a specific USB model/revision to reference-tested status.
 
 ## Transport coverage
 
-| USB ID | Candidate behavior | Validation |
+| USB ID | Implemented behavior | Validation |
 |---|---|---|
 | `0416:5408` | LY / WinUSB, JPEG profiles | 1920 × 462 previously confirmed on reference hardware; framing regression tests retained. |
 | `87AD:70DB` | ChiZhu / WinUSB, JPEG and documented RGB565 profiles | 480 × 480 previously confirmed; additional profiles checked offline only. |

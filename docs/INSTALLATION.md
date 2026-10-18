@@ -1,6 +1,6 @@
 # Installation and first setup
 
-Windows 10 version 2004 (19041) or Windows 11, x64. Physical output requires a Thermalright display with a recognized JPEG profile; the interface can run without a display.
+Windows 10 version 2004 (19041) or Windows 11, x64. Physical output requires a supported Thermalright transport and a recognized JPEG or RGB565 profile; see the [compatibility matrix](USB_COMPATIBILITY.md). The interface can run without a display.
 
 ## Install
 
@@ -9,10 +9,10 @@ Run Setup, accept the administrator prompt, choose shortcuts and optionally enab
 Setup is self-contained. Internet is required for city search, weather and update checks. LOU does not yet have a publisher signature; SHA-256 hashes verify file integrity, not publisher trust.
 
 1. Exit TRCC and any other LOU edition from the notification area.
-2. Check devices, orientation and pages in **Displays**. Each display has an independent page interval.
+2. Check devices, orientation and pages in **Displays**. Each display has an independent page interval. For a landscape panel mounted vertically, select 90° or 270° and save; the pages adapt automatically.
 3. In **Sensors**, assign the radiator, case fans and pump using confirmed wiring. RPM alone cannot identify a connector. Temperatures and a single GPU are detected automatically when available.
 4. Find and select your city in **Weather**, then save.
-5. Choose **Settings → Language → English / Français**, then **Save and apply**. The app and both display formats change together. Existing configurations keep French; new configurations follow Windows (French or English fallback).
+5. Choose **Settings → Language → English / Français**, then **Save and apply**. The app and all display layouts change together. Existing configurations keep French; new configurations follow Windows (French or English fallback).
 
 ## Updates
 

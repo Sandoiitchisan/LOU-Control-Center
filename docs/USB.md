@@ -13,8 +13,8 @@ LY (0416:5408): 2,048-byte handshake, validated magic, geometry from PM/SUB and 
 
 ChiZhu (87AD:70DB): 64-byte handshake, PM at offset 24, SUB at 36, 64-byte image header with dimensions/format and size at offset 60. 16 KiB transfers and an empty packet when USB-aligned. Some square displays require continuous transmission.
 
-The paragraphs above describe the original stable transports. The current development candidate adds native HID type 2, LY1 and ALi/WinUSB, plus documented RGB565 profiles. See the [current compatibility matrix, protocol details and additional pinned sources](USB_COMPATIBILITY.md). Unknown models and inconsistent geometry remain rejected. No driver replacement, firmware commands, permanent-logo writes or fan controls are sent.
+The paragraphs above describe the original stable transports. Since 2.2.0, the stable implementation includes native HID type 2, LY1 and ALi/WinUSB, plus documented RGB565 profiles. See the [current compatibility matrix, protocol details and additional pinned sources](USB_COMPATIBILITY.md). Unknown models and inconsistent geometry remain rejected. No driver replacement, firmware commands, permanent-logo writes or fan controls are sent.
 
-The initial profile is detected automatically; users can check the test pattern and select orientation. Reconnection requires the same PnP identity and native geometry. Both families use independent sessions, with serialized transfers per device.
+The initial profile is detected automatically; users can check the test pattern and select orientation. Reconnection requires the same PnP identity and native geometry. Supported families use independent sessions, with serialized transfers per device.
 
 JPEG profiles in the protocol table can be decoded, but only 1920 × 462 and 480 × 480 have been observed on reference hardware. Other variants require dedicated physical validation. Closing/reopening a handle does not prove recovery after unplugging a cable or resuming from sleep.

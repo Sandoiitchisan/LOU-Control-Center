@@ -1,5 +1,12 @@
 # Validation
 
+## 2.2.1 — 18 October 2026
+
+256 application tests pass. The standalone executable exports 320 images across sixteen geometries in French and English. Full-height portrait compositions, empty states and dedicated cooling/long-label captures were visually reviewed. Raw RGB565 and JPEG rotation checks cover 90°/270° without USB writes. Offline render plus JPEG encoding has 8–12 ms medians on the development PC; this is not a physical frame-rate claim. See [release details](RELEASE-2.2.1.md). No installed application, saved settings or sensor assignments were changed.
+
+
+Post-release community feedback in [issue #3](https://github.com/Sandoiitchisan/LOU-Control-Center/issues/3) reports working portrait pages and requests larger fonts. This does not extend model-specific transport validation or constitute an installer test.
+
 ## Stable 2.2.0 promotion — October 17, 2026
 
 - The user confirmed that the reported RX 9060 XT temperature problem is fixed. This is a user-reported hardware result, not a new measurement made by the development agent.
@@ -64,6 +71,3 @@ Publication update: the owner subsequently uploaded this exact portable ZIP as `
 ## Limits
 
 These are short tests, not proof of multi-day endurance, physical unplugging or sleep/resume recovery. NVIDIA hardware and other motherboard/display models still need physical testing. Automated tests check identities and the absence of fabricated values; they do not replace hardware tests. Users must map RPM readings to their own wiring.
-## 2.2.1 portrait candidate — 18 October 2026
-
-256 application tests pass. The standalone candidate exports 320 images across sixteen geometries in French and English. Full-height portrait compositions, empty states and dedicated cooling/long-label captures were visually reviewed. Raw RGB565 and JPEG rotation checks cover 90°/270° without USB writes. Offline render plus JPEG encoding has 8–12 ms medians on the development PC; this is not a physical frame-rate claim. See [candidate details](RELEASE-2.2.1.md). No installed application, saved settings or sensor assignments were changed.

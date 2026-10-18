@@ -1,6 +1,6 @@
 # Licensing transition review — release gate
 
-**17 October 2026 status:** the owner has published the 2.2 RC1 portable archive. Its corresponding source and this review are being made available together. This records the publication; it does not resolve the provenance questions below or certify the restrictive licensing of the whole application. Earlier releases and third-party rights remain unchanged. Complete this review before treating the intended transition as cleared for subsequent releases.
+**18 October 2026 status:** RC1 and stable 2.2.0/2.2.1 have been published with corresponding sources and this review. This records the publication; it does not resolve the provenance questions below or certify the restrictive licensing of the whole application. Earlier releases and third-party rights remain unchanged. Complete this review before treating the intended transition as cleared.
 
 The owner requests free permitted use of original LOU code, with commercial exploitation, derivatives and redistribution subject to a separate agreement. The unmodified PolyForm Strict text has been prepared in LICENSE. It is not an attempt to impose these restrictions on previous GPL grants or on third-party software.
 
