@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.2.1 — portrait candidate (unreleased)
+
+- Responsive portrait compositions for all five dashboard pages, plus the dedicated cooling view.
+- Automatic layout selection from each display's oriented dimensions; 90°/270° keeps the physical USB raster intact.
+- Taller portrait preview and a bilingual orientation hint in Displays.
+- Full-height framing, proportionate gauges and cover art, readable missing-data states and all five existing cooling assignments.
+- 256 application tests passed; 320 standalone preview exports across sixteen geometries in French and English. Physical portrait validation is pending.
+- Self-contained installer and portable builds are prepared for testing. Stable 2.2.0 remains the published release. See [candidate details](docs/RELEASE-2.2.1.md).
+
 ## 2.2.0 — 2026-10-17
 
 Stable promotion of 2.2 RC1, retaining its application implementation. [Release and downloads](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.0).

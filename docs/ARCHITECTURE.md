@@ -5,7 +5,7 @@ The project is independent of the personal edition. No server connection, city, 
 - Core: JSON configuration, five pages, per-display profiles and independent schedulers.
 - Providers: one shared DataHub collects PC, media, game and weather information. LibreHardwareMonitor 0.9.6 provides AMD/NVIDIA/Intel temperatures and fan readings, supplemented by AMD ADL. Missing readings never become zero.
 - Devices: PnP discovery limited to recognized USB families, native HID type 2 and LY/LY1/ChiZhu/ALi WinUSB handshakes with serialized sessions. Exact physical instance routing prevents cross-device writes. Persistent geometry, codec and byte order are checked at reconnection; changes require a detection reset. SCSI/HID type 3 are identified but disabled. See USB_COMPATIBILITY.md for validation limits.
-- Rendering: panoramic, rectangular landscape and five compact compositions. 90/270-degree orientation changes logical dimensions before physical rotation. JPEG and RGB565 encoding share explicit raster checks. An optional cooling view is available.
+- Rendering: panoramic, rectangular landscape, compact and full-height portrait compositions. Portrait layout uses a fixed logical width with a variable height; circles, fonts and artwork are never stretched. 90/270-degree orientation changes logical dimensions before physical rotation. JPEG and RGB565 encoding share explicit raster checks. An optional cooling view is available in square and portrait layouts.
 - App: a render/transport thread pair per display, cancellable high-resolution pacing and latest-frame-only buffering. WPF samples previews at 5 Hz without blocking rendering. Requested frame limits are not measured FPS.
 
 ## Reading identity
