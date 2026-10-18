@@ -35,6 +35,23 @@ Use an AIO display, a larger case display, or both simultaneously. Choose which 
 
 **Screen not recognized?** [Download LOU Diagnostics](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/diagnostics-v1.0.0/LOU-Diagnostics.exe), a separate portable Windows tool that generates an anonymized local text report for display compatibility issues. It performs no RGB scan, needs no LOU installation, and uploads nothing. Its GitHub button opens a new issue where you can attach the report yourself. [Instructions and source](docs/DIAGNOSTICS.md).
 
+## What’s new in 2.2.1
+
+- Portrait layouts for all five pages: System, Weather, Music, Gaming and Ambient.
+- Automatic layout adaptation: stacked sections on tall displays and compact arrangements on smaller screens.
+- Portrait cooling view, using your existing CPU temperature and fan/pump assignments.
+- Proportionate graphics: gauges, text and album artwork retain their proportions.
+- Taller portrait preview inside the application.
+- French and English support, including orientation guidance in display settings.
+- Each display keeps its own orientation, selected pages, page interval and frame-rate settings.
+
+## Enable portrait mode
+
+- Open Displays and select your screen.
+- Choose 90° or 270° for a landscape display mounted vertically.
+- Save and apply your settings.
+- The layout adapts automatically. Use the calibration pattern to check the direction if needed. Displays with native portrait dimensions also receive the portrait layout.
+
 ## New in 2.2 — RGB and more display formats
 
 - A bilingual **RGB** section for devices, zones, colors, supported hardware effects, brightness and speed.
