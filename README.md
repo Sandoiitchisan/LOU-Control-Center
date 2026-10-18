@@ -7,15 +7,15 @@
 A Windows application that transforms your Thermalright PC case and AIO displays into customizable dashboards, with optional RGB lighting control.
 
 ![Windows 10 and 11 x64](https://img.shields.io/badge/Windows-10%20%7C%2011%20x64-0078D4?style=flat-square)
-![Stable 2.2.0](https://img.shields.io/badge/stable-2.2.0-68E4CF?style=flat-square)
+![Stable 2.2.1](https://img.shields.io/badge/stable-2.2.0-68E4CF?style=flat-square)
 
 [![PolyForm Strict License](https://img.shields.io/badge/license-PolyForm_Strict-9B5CFF?style=flat-square)](LICENSING.md)
 
-[![Download for Windows — Standalone x64 Installer](docs/images/telecharger.svg)](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.0/LOU-Control-Center-Setup-2.2.0-win-x64.exe)
+[![Download for Windows — Standalone x64 Installer](docs/images/telecharger.svg)](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.1/LOU-Control-Center-Setup-2.2.1-win-x64.exe)
 
-[Portable version](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.0/LOU-Control-Center-Portable-2.2.0-win-x64.zip) · [Release notes](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.0) · [Installation guide](docs/INSTALLATION.md)
+[Portable version](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.1/LOU-Control-Center-Portable-2.2.1-win-x64.zip) · [Release notes](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.1) · [Installation guide](docs/INSTALLATION.md)
 
-[Browse 2.2.0 source](https://github.com/Sandoiitchisan/LOU-Control-Center/tree/v2.2.0) · [Download source ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.0/LOU-Control-Center-Sources-2.2.0.zip) · [Previous RC1](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2rc1)
+[Browse 2.2.1 source](https://github.com/Sandoiitchisan/LOU-Control-Center/tree/v2.2.1) · [Download source ZIP](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/download/v2.2.1/LOU-Control-Center-Sources-2.2.1.zip) · [Previous RC1](https://github.com/Sandoiitchisan/LOU-Control-Center/releases/tag/v2.2.1)
 
 </div>
 
